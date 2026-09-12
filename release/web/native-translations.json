@@ -1,0 +1,66 @@
+{
+  "zh-CN": {
+    "native.updateChoose": "选择新版程序文件夹",
+    "native.updateCheck": "检查更新",
+    "native.updateTitle": "软件更新",
+    "native.updateDetail": "文件校验通过。重新启动以使用所选版本，保留当前设置和校准。",
+    "native.restart": "重新启动",
+    "common.cancel": "取消"
+  },
+  "zh-TW": {
+    "native.updateChoose": "選擇新版程式資料夾",
+    "native.updateCheck": "檢查更新",
+    "native.updateTitle": "軟體更新",
+    "native.updateDetail": "檔案驗證通過。重新啟動以使用所選版本，保留目前設定與校準。",
+    "native.restart": "重新啟動",
+    "common.cancel": "取消"
+  },
+  "en": {
+    "native.updateChoose": "Choose the folder containing the newer app",
+    "native.updateCheck": "Check for update",
+    "native.updateTitle": "Software update",
+    "native.updateDetail": "Files verified. Restart to use the selected version while keeping current settings and calibration.",
+    "native.restart": "Restart",
+    "common.cancel": "Cancel"
+  },
+  "ja": {
+    "native.updateChoose": "新しいアプリのフォルダーを選択",
+    "native.updateCheck": "更新を確認",
+    "native.updateTitle": "ソフトウェア更新",
+    "native.updateDetail": "ファイルを確認しました。現在の設定と調整を保ったまま、選択したバージョンを使うため再起動します。",
+    "native.restart": "再起動",
+    "common.cancel": "キャンセル"
+  },
+  "fr": {
+    "native.updateChoose": "Choisir le dossier de la nouvelle application",
+    "native.updateCheck": "Rechercher une mise à jour",
+    "native.updateTitle": "Mise à jour logicielle",
+    "native.updateDetail": "Fichiers vérifiés. Redémarrez pour utiliser la version choisie en conservant les réglages et l’étalonnage.",
+    "native.restart": "Redémarrer",
+    "common.cancel": "Annuler"
+  },
+  "de": {
+    "native.updateChoose": "Ordner der neuen Anwendung auswählen",
+    "native.updateCheck": "Nach Aktualisierung suchen",
+    "native.updateTitle": "Softwareaktualisierung",
+    "native.updateDetail": "Dateien geprüft. Neustarten, um die gewählte Version mit den aktuellen Einstellungen und der Kalibrierung zu verwenden.",
+    "native.restart": "Neu starten",
+    "common.cancel": "Abbrechen"
+  },
+  "it": {
+    "native.updateChoose": "Scegli la cartella della nuova applicazione",
+    "native.updateCheck": "Controlla aggiornamenti",
+    "native.updateTitle": "Aggiornamento software",
+    "native.updateDetail": "File verificati. Riavvia per usare la versione scelta mantenendo impostazioni e calibrazione attuali.",
+    "native.restart": "Riavvia",
+    "common.cancel": "Annulla"
+  },
+  "es": {
+    "native.updateChoose": "Elegir la carpeta de la nueva aplicación",
+    "native.updateCheck": "Buscar actualización",
+    "native.updateTitle": "Actualización de software",
+    "native.updateDetail": "Archivos verificados. Reinicia para usar la versión seleccionada conservando los ajustes y la calibración actuales.",
+    "native.restart": "Reiniciar",
+    "common.cancel": "Cancelar"
+  }
+}

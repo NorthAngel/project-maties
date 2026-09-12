@@ -34,7 +34,13 @@ try {
     } else {
       $bytes = [IO.File]::ReadAllBytes($absolute)
       $payload = @{ content = [Convert]::ToBase64String($bytes); encoding = 'base64' } | ConvertTo-Json -Compress
-      $blob = ($payload | gh api --method POST "repos/$Repository/git/blobs" --input - | ConvertFrom-Json)
+      $blobInput = Join-Path ([IO.Path]::GetTempPath()) ("project-maties-blob-{0}.json" -f [guid]::NewGuid())
+      [IO.File]::WriteAllText($blobInput, $payload, (New-Object Text.UTF8Encoding($false)))
+      try {
+        $blob = (gh api --method POST "repos/$Repository/git/blobs" --input $blobInput | ConvertFrom-Json)
+      } finally {
+        Remove-Item -LiteralPath $blobInput -Force -ErrorAction SilentlyContinue
+      }
       $sha = $blob.sha
     }
     if (-not $sha) { throw "GitHub did not return a blob SHA for $relative" }

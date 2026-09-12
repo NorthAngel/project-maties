@@ -1,19 +1,20 @@
 {
   "host": "webview2",
   "product": "ControllerCompanion",
+  "version": "0.6.0",
   "files": {
-    "ControllerCompanion.exe": "c7265242250e530ec88d5f8a1f412782ad3caebf11dc46eb7af3ad5fd22f6032",
+    "ControllerCompanion.exe": "18f39325edefc4b705a6b626d70def15065d6220e95ca91151cbdcadab63128a",
     "ControllerCompanion.exe.config": "051099983b896673909e01a1f631b6652abb88da95c9f06f3efef4be033091fa",
     "LICENSE": "a2e625d7ab396d8b7dd737d9cbbfa801679ecca014c1170f44da6e61e0d834ee",
     "Microsoft.Web.WebView2.Core.dll": "24b1a6be3a7956e00d0509d4eaebf08e418fc219e964b6c269d2e04439333685",
     "Microsoft.Web.WebView2.Wpf.dll": "61e0bc8279aa368ad0606410ee193420c0e4f780c8df07dcae95929174c549a8",
-    "native/ControllerBridge.exe": "835ca5a7823ed9d38b970210b2e4e8f2c4ec9ddceb406983e9c6ebc4764bcc0d",
+    "native/ControllerBridge.exe": "b40eb2e2d5700e5cfaffa7330dc2bd772f8152072f313ab6f8facfb5dbd5f2ab",
     "native/GameControllerDB-LICENSE.txt": "97f35b302b361680ec1e891e95d2d52097bb95abff361434916d99dc1305f127",
     "native/gamecontrollerdb.txt": "affab13e91183d918fa96e3e9efa13ac0335479e60cff09fafe81dde4e64070b",
     "native/provenance.json": "2b1f7b9cec871e5463e35886125179f1a136de1b4bc44da667ae729623c02a5f",
     "native/SDL-LICENSE.txt": "1c040b8271b37e5076359f8fd54240e371114112924d2df81ef87c7d6a1dfdfd",
     "native/SDL3.dll": "1f98969319302a100931f4385e5918a0bd53ab07773040682d22e7edb54858c0",
-    "recovery.zip": "8f8427652217afe624eac3518acf0b1a44489b45f662235fb13b5425d17d487d",
+    "recovery.zip": "57a739fc4f5be820e152ea69ae323aab4a259ca4dddf577858d98823e27d192a",
     "THIRD-PARTY-NOTICES.md": "c4e738f78a8c389704b22d33572b048490ca0b4a5c5960b883e54a76564be1d7",
     "web/assets/app-icon.ico": "49ac6baa8c7fbe24f0b1c10033fa6bdd8b18d5c9685018d7ef52b04e74a6657a",
     "web/assets/app-icon.png": "74f3aa1907b41736eec8639e446177c43424264ceeb57b4f983394fb5b72d126",
@@ -150,8 +151,7 @@
     "web/src/wheel.css": "ea5765626ae2f597118635bc5fd7aba45787cd923fecf6aa2956fa15b40dcbab",
     "WebView2-LICENSE.txt": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55",
     "WebView2Loader.dll": "239a9d6614a6cfade62b47cdb0be36e3069eedc438c3e0647a9e7b7c84ef6ea0",
-    "使用说明.md": "103b5de6e7827d969b47e21402532d16241d3188a636ad04a97a2301474b1778",
+    "使用说明.md": "264debe56184a93bafec1397830a51fcd4dd081c8aefdf9fde77584983b0391f",
     "验证记录-v0.6.0.md": "f8a1c65bfcf75cf509fe4825d347972c03336d96002c61c0f23164e61b2b99fb"
-  },
-  "version": "0.6.0"
+  }
 }

@@ -1,0 +1,7 @@
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}#wheel{position:absolute;width:768.178px;height:714.608px;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--wheel-scale,1))}#sectors{position:absolute;inset:0}.sector{position:absolute}.letter,.plate{pointer-events:none!important}
+
+#left-sectors{display:none}.dual #wheel{width:1584.356px}.dual #sectors{left:816.178px;width:768.178px}.dual #left-sectors{display:block;position:absolute;left:0;top:0;width:768.178px;height:714.608px}
+
+/* The overlay stays transparent; these tokens keep its wheel legible in both themes. */
+html[data-theme=dark] .letter::before{background:#0008;border-color:#ffffffb8}
+html[data-theme=dark] .letter.pulse::before{background:#ffffff30}
