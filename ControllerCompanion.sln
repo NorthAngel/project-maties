@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerBridge", "native\ControllerBridge.csproj", "{D2CFCE13-510A-446B-A2F4-E3030A6B2421}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop and Interface", "Desktop and Interface", "{4725DE65-0C32-4DAF-8B56-4026CE5D0831}"
+	ProjectSection(SolutionItems) = preProject
+		desktop.cjs = desktop.cjs
+		preload.cjs = preload.cjs
+		overlay.html = overlay.html
+		settings.html = settings.html
+		src\calibration.js = src\calibration.js
+		src\activation.js = src\activation.js
+		src\session.js = src\session.js
+		src\pointer.js = src\pointer.js
+		src\controls.js = src\controls.js
+		src\radial.js = src\radial.js
+		src\settings.js = src\settings.js
+		src\settings.css = src\settings.css
+		src\overlay.js = src\overlay.js
+		src\overlay.css = src\overlay.css
+		src\appearance.js = src\appearance.js
+		src\wheel-view.js = src\wheel-view.js
+		src\figma-layout.js = src\figma-layout.js
+		src\wheel.css = src\wheel.css
+		maintenance.cjs = maintenance.cjs
+		src\system.js = src\system.js
+		src\i18n.js = src\i18n.js
+		src\theme.js = src\theme.js
+		package.json = package.json
+		docs\代码与调试说明.md = docs\代码与调试说明.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "host", "host", "{7226ABEA-787E-1D09-10EA-A2ECF996D6A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerCompanion", "host\ControllerCompanion.csproj", "{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|x64.ActiveCfg = Debug|x64
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|x64.Build.0 = Debug|x64
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Debug|x86.Build.0 = Debug|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|x64.ActiveCfg = Release|x64
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|x64.Build.0 = Release|x64
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|x86.ActiveCfg = Release|Any CPU
+		{D2CFCE13-510A-446B-A2F4-E3030A6B2421}.Release|x86.Build.0 = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|x64.Build.0 = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1D1B5944-AC4F-48AF-92C4-DF347BCD712E} = {7226ABEA-787E-1D09-10EA-A2ECF996D6A6}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <PropertyGroup><Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration><Platform Condition=" '$(Platform)' == '' ">x64</Platform><ProjectGuid>{D2CFCE13-510A-446B-A2F4-E3030A6B2421}</ProjectGuid><OutputType>Exe</OutputType><RootNamespace>ControllerCompanion</RootNamespace><AssemblyName>ControllerBridge</AssemblyName><TargetFrameworkVersion>v4.8</TargetFrameworkVersion><PlatformTarget>x64</PlatformTarget><OutputPath>bin\</OutputPath><WarningLevel>4</WarningLevel></PropertyGroup>
+ <PropertyGroup Condition=" '$(Configuration)' == 'Debug' "><DebugSymbols>true</DebugSymbols><DebugType>full</DebugType><Optimize>false</Optimize></PropertyGroup>
+ <PropertyGroup Condition=" '$(Configuration)' == 'Release' "><DebugType>pdbonly</DebugType><Optimize>true</Optimize></PropertyGroup>
+ <ItemGroup><Reference Include="System"/><Reference Include="System.Core"/><Reference Include="System.Web.Extensions"/></ItemGroup><ItemGroup><Compile Include="Bridge.cs"/><Compile Include="Ime.cs"/><Compile Include="SdlNative.cs"/><Compile Include="ControllerInput.cs"/></ItemGroup>
+ <ItemGroup><Content Include="vendor\SDL3.dll"><Link>SDL3.dll</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content><Content Include="vendor\gamecontrollerdb.txt"><Link>gamecontrollerdb.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content><Content Include="vendor\SDL-LICENSE.txt"><Link>SDL-LICENSE.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content><Content Include="vendor\GameControllerDB-LICENSE.txt"><Link>GameControllerDB-LICENSE.txt</Link><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content></ItemGroup>
+ <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+</Project>

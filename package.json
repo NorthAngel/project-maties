@@ -1,0 +1,30 @@
+{
+  "name": "project-maties",
+  "version": "0.6.0",
+  "type": "module",
+  "description": "Small Windows controller companion using shared WebView2, radial typing and configurable gamepad input",
+  "license": "MIT",
+  "keywords": [
+    "gamepad",
+    "controller",
+    "gamepad-api",
+    "8bitdo",
+    "xinput",
+    "input"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "dev": "vite --open settings.html",
+    "build:host": "dotnet build host/ControllerCompanion.csproj -c Release",
+    "build:native": "node scripts/build-native.mjs",
+    "test:controllers": "node scripts/test-controllers.mjs",
+    "test:host": "pwsh -NoProfile -File scripts/test-host.ps1",
+    "package:desktop": "pwsh -NoProfile -File scripts/package-webview2.ps1",
+    "verify:package": "node scripts/verify-package.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1",
+    "vite": "^7.1.0"
+  },
+  "private": true
+}

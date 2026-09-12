@@ -1,0 +1,56 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+namespace ProjectMaties {
+ internal sealed class BrowserWindow : Window {
+  internal readonly string Role;
+  internal readonly WebView2CompositionControl View;
+  readonly AppHost host;
+  internal BrowserWindow(AppHost owner,string role) {
+   host=owner;Role=role;Title=role=="settings"?"Controller Companion":"Controller Companion · 转盘";
+   WindowStyle=WindowStyle.None;ShowActivated=role=="settings";ShowInTaskbar=role=="settings";
+   Width=role=="settings"?1040:653;Height=role=="settings"?780:608;
+   MinWidth=role=="settings"?940:0;MinHeight=role=="settings"?700:0;
+   ResizeMode=role=="settings"?ResizeMode.CanResize:ResizeMode.NoResize;
+   if(role=="overlay"){AllowsTransparency=true;Background=Brushes.Transparent;Topmost=true;Focusable=false;}
+   else Background=new SolidColorBrush(Color.FromRgb(245,245,247));
+   View=new WebView2CompositionControl{DefaultBackgroundColor=role=="overlay"?System.Drawing.Color.Transparent:System.Drawing.Color.FromArgb(245,245,247),Focusable=role=="settings",IsHitTestVisible=role=="settings"};
+   Content=View;
+   SourceInitialized+=(s,e)=>{var h=new WindowInteropHelper(this).Handle;HwndSource.FromHwnd(h).AddHook(WindowProc);if(role=="overlay")NativeWindows.MakeOverlay(h);};
+   Closing+=(s,e)=>{if(!host.Quitting){e.Cancel=true;if(role=="settings")host.CloseSettings();}};
+   StateChanged+=(s,e)=>{if(WindowState==WindowState.Maximized)WindowState=WindowState.Normal;if(WindowState==WindowState.Minimized)host.StopInput();};
+  }
+  IntPtr WindowProc(IntPtr hwnd,int msg,IntPtr wp,IntPtr lp,ref bool handled){if(msg==0x0312){host.StopInput();handled=true;}return IntPtr.Zero;}
+  internal async Task InitializeAsync(CoreWebView2Environment environment,string webRoot) {
+   await View.EnsureCoreWebView2Async(environment);
+   var core=View.CoreWebView2;
+   core.SetVirtualHostNameToFolderMapping("maties.local",webRoot,CoreWebView2HostResourceAccessKind.DenyCors);
+   core.Settings.AreDevToolsEnabled=host.Testing;core.Settings.AreDefaultContextMenusEnabled=false;core.Settings.IsStatusBarEnabled=false;core.Settings.IsZoomControlEnabled=false;core.Settings.AreBrowserAcceleratorKeysEnabled=false;
+   core.NewWindowRequested+=(s,e)=>e.Handled=true;
+   core.PermissionRequested+=(s,e)=>e.State=CoreWebView2PermissionState.Deny;
+   core.DownloadStarting+=(s,e)=>e.Cancel=true;
+   core.NavigationStarting+=(s,e)=>{if(e.Uri!="https://maties.local/"+Role+".html")e.Cancel=true;};
+   core.ProcessFailed+=(s,e)=>host.BrowserFailed(e.ProcessFailedKind.ToString());
+   core.WebMessageReceived+=async(s,e)=>{
+    string id=null;
+    try {
+     if(!HostPolicy.Trusted(e.Source)||e.WebMessageAsJson.Length>1048576)return;
+     var request=AppHost.Parse(e.WebMessageAsJson);object requestId;
+     if(request.TryGetValue("id",out requestId)&&requestId!=null)id=Convert.ToString(requestId);
+     var result=await host.RouteAsync(this,HostPolicy.Text(request,"method"),request.ContainsKey("args")?request["args"]:null);
+     if(id!=null)Reply(new{id=requestId,result});
+    }catch(Exception ex){if(id!=null)Reply(new{id,error=ex.Message});}
+   };
+   await core.AddScriptToExecuteOnDocumentCreatedAsync("window.__hostRole='"+Role+"';document.addEventListener('DOMContentLoaded',()=>document.documentElement.dataset.hostRole='"+Role+"',{once:true});");
+   core.Navigate("https://maties.local/"+Role+".html");
+  }
+  void Reply(object message){if(View.CoreWebView2!=null&&!host.Quitting)View.CoreWebView2.PostWebMessageAsJson(AppHost.Json(message));}
+  internal void Emit(string name,object payload){Reply(new{ @event=name,payload });}
+  internal void DisposeBrowser(){View.Dispose();}
+ }
+}

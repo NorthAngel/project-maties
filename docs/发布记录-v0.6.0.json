@@ -1,0 +1,11 @@
+{
+  "version": "0.6.0",
+  "target": "win-x64",
+  "appDirectoryBytes": 6290072,
+  "zipBytes": 3134506,
+  "zipSha256": "3787232812c6cf18245e27f7927ab63153be5ee833eb16ad09d486fd7556f0f9",
+  "package": "artifacts/ControllerCompanion-0.6.0-20260912-130333-win-x64.zip",
+  "sharedRuntime": "Microsoft Edge WebView2 Evergreen",
+  "wheelArtworkSha256Verified": true,
+  "desktopVerification": "pending-interactive-session"
+}

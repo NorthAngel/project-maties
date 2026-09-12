@@ -1,0 +1,19 @@
+node_modules/
+dist/
+artifacts/
+packages/
+**/bin/
+**/obj/
+# The small, reviewed shipping executables and portable ZIP are intentionally
+# tracked under release/. Build outputs elsewhere remain ignored.
+!release/
+!release/**
+recovery/
+user-data*/
+.superpowers/
+tests/artifacts*/
+*.user
+*.suo
+*.local
+.DS_Store
+.vite/
