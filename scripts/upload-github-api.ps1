@@ -75,9 +75,14 @@ try {
     $refPayload = @{ref = "refs/heads/$branch"; sha = $commit.sha} | ConvertTo-Json -Compress
     $refInput = Join-Path ([IO.Path]::GetTempPath()) ("project-maties-ref-{0}.json" -f [guid]::NewGuid())
     [IO.File]::WriteAllText($refInput, $refPayload, (New-Object Text.UTF8Encoding($false)))
-    $existing = gh api "repos/$Repository/git/ref/heads/$branch" 2>$null
+    $branchExists = $true
     try {
-      if ($LASTEXITCODE -eq 0) {
+      $existing = gh api "repos/$Repository/git/ref/heads/$branch" 2>$null
+    } catch {
+      $branchExists = $false
+    }
+    try {
+      if ($branchExists) {
         $result = gh api --method PATCH "repos/$Repository/git/refs/heads/$branch" --input $refInput
       } else {
         $result = gh api --method POST "repos/$Repository/git/refs" --input $refInput
