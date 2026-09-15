@@ -17,7 +17,7 @@ npm run test:host
 npm run package:desktop
 ```
 
-发布过程先在 `artifacts/` 使用新目录完成构建，`artifacts/latest-build.json` 记录程序目录、ZIP、大小和 SHA-256。经过检查的候选二进制会复制到受控的 `release/` 目录，方便私有 GitHub 仓库直接下载；运行其中的 `ControllerCompanion.exe` 时仍需要系统共享 WebView2。开发源码不能直接作为安装目录使用。
+发布过程先在 `artifacts/` 使用新目录完成构建，`artifacts/latest-build.json` 记录程序目录、ZIP、大小和 SHA-256。经过检查的候选二进制会复制到受控的 `release/` 目录，方便从 GitHub 仓库下载；运行其中的 `ControllerCompanion.exe` 时仍需要系统共享 WebView2。开发源码不能直接作为安装目录使用。
 
 `npm run dev` 仅预览设置网页，系统托盘、输入、校准和系统操作需使用 Windows 宿主。浏览器预览不能作为桌面功能验收。
 
@@ -42,10 +42,15 @@ npm run package:desktop
 
 [架构与界面改版说明](docs/架构与界面改版.md) · [使用说明](docs/使用说明.md) · [贡献流程](CONTRIBUTING.md) · [依赖许可](THIRD-PARTY-NOTICES.md)
 
-## 发布与隐私
+## 公开访问与发布
 
-源码保留原上游 MIT 许可与历史： https://github.com/htlin222/web-gamepad-starter 。此项目的目标仓库为私有 `NorthAngel/project-maties`；README 中的目标名称不代表远程仓库已创建。
+项目公开托管于 [NorthAngel/project-maties](https://github.com/NorthAngel/project-maties)。任何设备均可在浏览器中查看源码、克隆仓库，或通过 GitHub 的 **Code → Download ZIP** 下载完整源码；经过检查的候选构件保存在仓库的 `release/` 目录中。
 
-持续集成只构建和保存测试产物，不部署 GitHub Pages，也不自动发布 Release。发布清单不含缓存、截图、个人配置或共享浏览器本体。用户配置继续存储在 `%APPDATA%/ControllerCompanion`。
+源码保留原上游 MIT 许可与历史： https://github.com/htlin222/web-gamepad-starter 。持续集成只构建和保存测试产物，不部署 GitHub Pages，也不自动发布 Release。发布清单不含缓存、截图、个人配置或共享浏览器本体。用户配置继续存储在 `%APPDATA%/ControllerCompanion`。
+
+## 贡献者
+
+- **NorthAngel**：项目发起、交互与视觉设计、维护。
+- **GPT**：代码贡献。
 
 ZIP 压缩体积和解压安装体积应分别报告；共享 WebView2 的已有安装和后续缓存不包含在程序目录体积中。
