@@ -216,6 +216,8 @@ export class RuntimeEngine {
       connected: Boolean(packet.connected),
       x: Number(packet.x) || 0,
       y: Number(packet.y) || 0,
+      rx: Number(packet.rx) || 0,
+      ry: Number(packet.ry) || 0,
       buttons: Number(packet.buttons) || 0,
       device: copy(packet.device),
 

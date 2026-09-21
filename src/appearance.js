@@ -9,9 +9,10 @@ export function migrateSettings(value={}){return normalizeAppearance(value);}
 export function applyWheelStyle(a,root=document.documentElement){
  const theme=root?.dataset?.theme??(globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light');
  const dark=theme==='dark';
- root.style.setProperty('--material-alpha',.12+.88*a.opacity/100);
+ root.style.setProperty('--material-alpha',a.opacity<=50?.1+.4*a.opacity/50:.5+.3*(a.opacity-50)/50);
  root.style.setProperty('--material-color',dark?'#484848':'#ffffff');
  root.style.setProperty('--glyph-color',dark?'#f2f2f2':'#444444');
  root.style.setProperty('--selection-color',dark?'#394F3E':'#F77E2D');
  root.style.setProperty('--selection-width',3);
 }
+
