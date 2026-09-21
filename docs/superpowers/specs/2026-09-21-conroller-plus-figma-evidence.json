@@ -1,0 +1,1410 @@
+{
+  "checkedAt": "2026-09-21",
+  "fileKey": "IfZlSFiA71x5b8nRJ70tJG",
+  "software": {
+    "page": "software",
+    "fonts": {
+      "SF Pro / Regular": 319,
+      "Rounded Mplus 1c / Medium": 6,
+      "Noto Sans SC / Regular": 2,
+      "Noto Sans JP / Regular": 1
+    },
+    "top": [
+      {
+        "id": "321:247",
+        "name": "手柄未接入",
+        "type": "GROUP",
+        "width": 912,
+        "height": 917,
+        "x": -1566,
+        "y": 219
+      },
+      {
+        "id": "411:110",
+        "name": "手柄已接入1",
+        "type": "GROUP",
+        "width": 904,
+        "height": 971,
+        "x": -625,
+        "y": 219
+      },
+      {
+        "id": "407:107",
+        "name": "控制器映射与输入设置界面",
+        "type": "GROUP",
+        "width": 893,
+        "height": 917,
+        "x": 969,
+        "y": 219
+      },
+      {
+        "id": "355:2",
+        "name": "语言选择 / 英文",
+        "type": "FRAME",
+        "width": 320,
+        "height": 241,
+        "x": -166,
+        "y": -153
+      },
+      {
+        "id": "354:7",
+        "name": "双盘预览",
+        "type": "FRAME",
+        "width": 893,
+        "height": 890,
+        "x": -578,
+        "y": 1386
+      },
+      {
+        "id": "412:135",
+        "name": "Group 8",
+        "type": "GROUP",
+        "width": 424,
+        "height": 195,
+        "x": 315,
+        "y": 366
+      }
+    ],
+    "reactions": [
+      {
+        "id": "316:79",
+        "name": "Appearance",
+        "reactions": [
+          {
+            "action": {
+              "type": "NODE",
+              "destinationId": "354:7",
+              "navigation": "NAVIGATE",
+              "transition": {
+                "type": "SMART_ANIMATE",
+                "easing": {
+                  "type": "CUSTOM_CUBIC_BEZIER",
+                  "easingFunctionCubicBezier": {
+                    "x1": 0.2199999988079071,
+                    "y1": 1,
+                    "x2": 0.36000001430511475,
+                    "y2": 1
+                  }
+                },
+                "duration": 0.3199999928474426
+              },
+              "resetVideoPosition": false,
+              "resetScrollPosition": false
+            },
+            "actions": [
+              {
+                "type": "NODE",
+                "destinationId": "354:7",
+                "navigation": "NAVIGATE",
+                "transition": {
+                  "type": "SMART_ANIMATE",
+                  "easing": {
+                    "type": "CUSTOM_CUBIC_BEZIER",
+                    "easingFunctionCubicBezier": {
+                      "x1": 0.2199999988079071,
+                      "y1": 1,
+                      "x2": 0.36000001430511475,
+                      "y2": 1
+                    }
+                  },
+                  "duration": 0.3199999928474426
+                },
+                "resetVideoPosition": false,
+                "resetScrollPosition": false
+              }
+            ],
+            "trigger": {
+              "type": "ON_CLICK"
+            }
+          }
+        ]
+      },
+      {
+        "id": "316:83",
+        "name": "Appearance",
+        "reactions": [
+          {
+            "action": {
+              "type": "NODE",
+              "destinationId": "354:7",
+              "navigation": "NAVIGATE",
+              "transition": {
+                "type": "SMART_ANIMATE",
+                "easing": {
+                  "type": "CUSTOM_CUBIC_BEZIER",
+                  "easingFunctionCubicBezier": {
+                    "x1": 0.2199999988079071,
+                    "y1": 1,
+                    "x2": 0.36000001430511475,
+                    "y2": 1
+                  }
+                },
+                "duration": 0.3199999928474426
+              },
+              "resetVideoPosition": false,
+              "resetScrollPosition": false
+            },
+            "actions": [
+              {
+                "type": "NODE",
+                "destinationId": "354:7",
+                "navigation": "NAVIGATE",
+                "transition": {
+                  "type": "SMART_ANIMATE",
+                  "easing": {
+                    "type": "CUSTOM_CUBIC_BEZIER",
+                    "easingFunctionCubicBezier": {
+                      "x1": 0.2199999988079071,
+                      "y1": 1,
+                      "x2": 0.36000001430511475,
+                      "y2": 1
+                    }
+                  },
+                  "duration": 0.3199999928474426
+                },
+                "resetVideoPosition": false,
+                "resetScrollPosition": false
+              }
+            ],
+            "trigger": {
+              "type": "ON_CLICK"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "animations": {
+    "frosted": {
+      "page": "frosted-默认",
+      "frameCount": 44,
+      "transitions": [
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                9
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            }
+          },
+          "count": 6
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_CLICK"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.30000001192092896
+            }
+          },
+          "count": 6
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_HOVER"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "DISSOLVE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.15000000596046448
+            }
+          },
+          "count": 7
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_CLICK"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "DISSOLVE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.07999999821186066
+            }
+          },
+          "count": 28
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "MOUSE_LEAVE",
+              "delay": 0
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "DISSOLVE",
+              "easing": {
+                "type": "EASE_OUT"
+              },
+              "duration": 0.10000000149011612
+            }
+          },
+          "count": 7
+        }
+      ],
+      "samples": [
+        {
+          "id": "102:2",
+          "name": "prototype · wake tab · state 1 · press1",
+          "action": {
+            "type": "NODE",
+            "destinationId": "102:158",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "102:158",
+          "name": "prototype · wake tab · state 2 · press2",
+          "action": {
+            "type": "NODE",
+            "destinationId": "102:314",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "102:314",
+          "name": "prototype · wake tab · state 3 · press3",
+          "action": {
+            "type": "NODE",
+            "destinationId": "102:2",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        }
+      ]
+    },
+    "medium": {
+      "page": "medium-默认",
+      "frameCount": 122,
+      "transitions": [
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                9
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            }
+          },
+          "count": 83
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                9
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 260
+            }
+          },
+          "count": 2
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_HOVER"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 240
+            }
+          },
+          "count": 14
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                65
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                66
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                67
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                68
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "MOUSE_LEAVE",
+              "delay": 0
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 260
+            }
+          },
+          "count": 35
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_HOVER"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 220
+            }
+          },
+          "count": 42
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                69
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                70
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                71
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                72
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                73
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                74
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                75
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                76
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                77
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        }
+      ],
+      "samples": [
+        {
+          "id": "132:2",
+          "name": "prototype · medium tab · state 1 · press1",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:156",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "132:156",
+          "name": "prototype · medium tab · state 2 · press2",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:310",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "132:310",
+          "name": "prototype · medium tab · state 3 · press3",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:2",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        }
+      ]
+    },
+    "opaque": {
+      "page": "opaque-默认",
+      "frameCount": 122,
+      "transitions": [
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                9
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            }
+          },
+          "count": 83
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                9
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 260
+            }
+          },
+          "count": 2
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_HOVER"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 240
+            }
+          },
+          "count": 14
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                65
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                66
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                67
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                68
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "MOUSE_LEAVE",
+              "delay": 0
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 260
+            }
+          },
+          "count": 35
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_HOVER"
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 220
+            }
+          },
+          "count": 42
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                69
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                70
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                71
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                72
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                73
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                74
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                75
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                76
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        },
+        {
+          "type": {
+            "trigger": {
+              "type": "ON_KEY_DOWN",
+              "device": "KEYBOARD",
+              "keyCodes": [
+                77
+              ]
+            },
+            "type": "NODE",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 180
+            }
+          },
+          "count": 1
+        }
+      ],
+      "samples": [
+        {
+          "id": "132:622",
+          "name": "prototype · opaque tab · state 1 · press1",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:776",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "132:776",
+          "name": "prototype · opaque tab · state 2 · press2",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:930",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        },
+        {
+          "id": "132:930",
+          "name": "prototype · opaque tab · state 3 · press3",
+          "action": {
+            "type": "NODE",
+            "destinationId": "132:622",
+            "navigation": "NAVIGATE",
+            "transition": {
+              "type": "SMART_ANIMATE",
+              "easing": {
+                "type": "CUSTOM_SPRING",
+                "easingFunctionSpring": {
+                  "mass": 1,
+                  "stiffness": 220,
+                  "damping": 24
+                }
+              },
+              "duration": 0.6200000047683716
+            },
+            "resetVideoPosition": false
+          }
+        }
+      ]
+    }
+  }
+}
