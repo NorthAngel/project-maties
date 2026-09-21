@@ -1,5 +1,6 @@
 import {FIGMA_LAYOUT,FIGMA_SIZE} from './figma-layout.js';
 import {DISCS} from './radial.js';
+import {transitionDisc} from './wheel-motion.js';
 let nextWheel=0;
 export async function createWheel(host) {
  const prefix=`wheel${++nextWheel}-`;
@@ -34,11 +35,12 @@ export async function createWheel(host) {
   }
   host.append(layer);
  }
- let last='';
+ let last='',lastMode=null;
  const update=state=>{
   const effective=state.shift&&state.mode<2?1-state.mode:state.mode;
   const key=`${effective}:${state.selected}`;if(key===last)return;last=key;
-  layers.forEach((layer,m)=>{layer.classList.toggle('active',m===effective);layer.setAttribute('aria-hidden',String(m!==effective));layer.inert=m!==effective;tiles[m].forEach((tile,s)=>tile.classList.toggle('selected',s===state.selected));});
+  layers.forEach((layer,m)=>{if(lastMode!==null&&lastMode!==effective)transitionDisc(layer,m===effective);layer.classList.toggle('active',m===effective);layer.setAttribute('aria-hidden',String(m!==effective));layer.inert=m!==effective;tiles[m].forEach((tile,s)=>tile.classList.toggle('selected',s===state.selected));});
+  lastMode=effective;
  };
  const pulse=(state,slot)=>{host.querySelectorAll('.pulse').forEach(e=>e.classList.remove('pulse'));if(state.selected===null)return;const m=state.shift&&state.mode<2?1-state.mode:state.mode;tiles[m][state.selected].querySelector(`[data-slot="${slot}"]`).classList.add('pulse');};
  return {update,pulse,size:FIGMA_SIZE};

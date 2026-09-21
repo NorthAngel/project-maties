@@ -12,3 +12,6 @@ html{background:transparent}.window-bar{height:34px;display:flex;align-items:cen
 .plate .selection-outline path{fill:none!important;stroke:var(--selection-color,#1058f9);stroke-width:var(--selection-width,3);stroke-opacity:1;pointer-events:none}
 .sector.selected .plate .selection-outline{opacity:1}
 .sector.selected .plate{filter:none!important}
+
+/* Conroller Plus: desktop wheels never accept pointer input. */
+.disc-layer{transition:none}.wheel,.wheel *{pointer-events:none!important;cursor:default!important}.letter:hover::before{opacity:0}.wheel-mode .drag-zone{display:none!important}
