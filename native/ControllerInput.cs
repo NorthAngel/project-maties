@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 internal class ControllerDevice {
- public string id, guid, name, kind, backend;
+ public string id, guid, name, kind, backend, path, serial;
  public bool mapped;
 }
 internal class ControllerSample {
@@ -66,7 +66,10 @@ internal sealed class ControllerInput : IDisposable {
  static string GuidFor(uint id) { byte[] bytes = new byte[33]; Sdl.SDL_GUIDToString(Sdl.SDL_GetJoystickGUIDForID(id), bytes, bytes.Length); return Encoding.ASCII.GetString(bytes, 0, 32); }
  ControllerDevice Describe(uint id) {
   int type = Sdl.SDL_GetGamepadTypeForID(id); ushort vendor = Sdl.SDL_GetJoystickVendorForID(id);
-  return new ControllerDevice { id="sdl:"+id, guid=GuidFor(id), name=Sdl.Text(Sdl.SDL_GetJoystickNameForID(id)), backend="SDL3", mapped=Sdl.SDL_IsGamepad(id)&&(!defaults.ContainsKey(GuidFor(id))||defaults[GuidFor(id)]!=null||mappings.ContainsKey(GuidFor(id))), kind=(type>=4&&type<=6)||vendor==0x054c?"playstation":type>=7&&type<=10?"nintendo":type==2||type==3?"xbox":"generic" };
+  string serial=""; IntPtr probe=Sdl.SDL_OpenJoystick(id);
+  try { if(probe!=IntPtr.Zero)serial=Sdl.Text(Sdl.SDL_GetJoystickSerial(probe)); }
+  finally { if(probe!=IntPtr.Zero)Sdl.SDL_CloseJoystick(probe); }
+  return new ControllerDevice { id="sdl:"+id, guid=GuidFor(id), path=Sdl.Text(Sdl.SDL_GetJoystickPathForID(id)), serial=serial, name=Sdl.Text(Sdl.SDL_GetJoystickNameForID(id)), backend="SDL3", mapped=Sdl.SDL_IsGamepad(id)&&(!defaults.ContainsKey(GuidFor(id))||defaults[GuidFor(id)]!=null||mappings.ContainsKey(GuidFor(id))), kind=(type>=4&&type<=6)||vendor==0x054c?"playstation":type>=7&&type<=10?"nintendo":type==2||type==3?"xbox":"generic" };
  }
  void CloseSelected() {
   if (gamepad != IntPtr.Zero) Sdl.SDL_CloseGamepad(gamepad);

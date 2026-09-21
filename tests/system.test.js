@@ -5,10 +5,10 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 const modules=()=>import('../src/system.js');
-test('system preferences whitelist values and preserve all eight locales',async()=>{
+test('system preferences whitelist values and preserve only supported locales',async()=>{
  const {normalizeSystem}=await modules();
- for(const locale of ['zh-CN','zh-TW','en','ja','fr','de','it','es'])assert.equal(normalizeSystem({locale}).locale,locale);
- assert.deepEqual(normalizeSystem({theme:'evil',locale:'bad',startAtLogin:'true',closeBehavior:'delete'}),{schemaVersion:1,locale:'zh-CN',theme:'system',startAtLogin:false,closeBehavior:'tray'});
+ for(const locale of ['zh-CN','en','ja'])assert.equal(normalizeSystem({locale}).locale,locale);
+ assert.deepEqual(normalizeSystem({theme:'evil',locale:'bad',startAtLogin:'true',closeBehavior:'delete'},'en'),{schemaVersion:2,locale:'en',theme:'system',startAtLogin:false,closeBehavior:'tray'});
  assert.equal(normalizeSystem({theme:'dark',startAtLogin:true,closeBehavior:'minimize'}).theme,'dark');
 });
 test('portable update verifies product, every hash, version and rejects traversal',async()=>{
@@ -42,3 +42,4 @@ test('repair checks backup before replacing missing or damaged native components
   await writeFile(path.join(root,'native/bin/SDL3.dll'),'bad');await writeFile(path.join(root,'recovery/SDL3.dll'),'bad backup');await assert.rejects(repairNative(root),/repair-backup/);
  }finally{await rm(root,{recursive:true,force:true});}
 });
+

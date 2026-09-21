@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {normalizeAppearance} from '../src/appearance.js';
 import {FIGMA_LAYOUT} from '../src/figma-layout.js';
 test('pure wheel default and bounded opacity independent of text color',()=>{
- const defaults=normalizeAppearance({});assert.deepEqual(Object.fromEntries(['mode','opacity','ink','scale','deadzone'].map(k=>[k,defaults[k]])),{mode:'wheel',opacity:15,ink:'original',scale:85,deadzone:22});
- assert.equal(normalizeAppearance({deadzone:100}).deadzone,40);
+ const defaults=normalizeAppearance({});assert.deepEqual(Object.fromEntries(['mode','opacity','scale','deadzoneLeft','deadzoneRight'].map(k=>[k,defaults[k]])),{mode:'wheel',opacity:50,scale:100,deadzoneLeft:10,deadzoneRight:10});
+ assert.equal(normalizeAppearance({deadzoneLeft:100}).deadzoneLeft,40);
  assert.equal(normalizeAppearance({opacity:500}).opacity,100);
  assert.equal(normalizeAppearance({opacity:-1}).opacity,0);
- assert.equal(normalizeAppearance({opacity:NaN}).opacity,15);
+ assert.equal(normalizeAppearance({opacity:NaN}).opacity,50);
  assert.equal(normalizeAppearance({mode:'practice',opacity:50,ink:'white',scale:70}).mode,'wheel');
 });
 test('all 84 glyphs and 21 sector shapes come from Figma exports',()=>{
@@ -25,3 +25,4 @@ test('all 84 glyphs and 21 sector shapes come from Figma exports',()=>{
  const ef=FIGMA_LAYOUT[0][1].filter(n=>n.type==='TEXT');
  assert.notEqual(ef.find(n=>n.text==='e').x,ef.find(n=>n.text==='f').x);
 });
+

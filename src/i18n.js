@@ -1,4 +1,4 @@
-export const LOCALES = ['zh-CN', 'zh-TW', 'en', 'ja', 'fr', 'de', 'it', 'es'];
+export const LOCALES = ['zh-CN', 'en', 'ja'];
 
 export const LANGUAGE_LABELS = {
   'zh-CN': '简体中文',

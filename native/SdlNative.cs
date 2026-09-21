@@ -27,6 +27,8 @@ internal static class Sdl {
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern void SDL_UpdateJoysticks();
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] [return:MarshalAs(UnmanagedType.I1)] public static extern bool SDL_IsGamepad(uint id);
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern IntPtr SDL_GetJoystickNameForID(uint id);
+ [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern IntPtr SDL_GetJoystickPathForID(uint id);
+ [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern IntPtr SDL_GetJoystickSerial(IntPtr joystick);
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern Guid SDL_GetJoystickGUIDForID(uint id);
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern void SDL_GUIDToString(Guid guid, byte[] text, int size);
  [DllImport(Dll, CallingConvention=CallingConvention.Cdecl)] public static extern ushort SDL_GetJoystickVendorForID(uint id);

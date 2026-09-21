@@ -6,7 +6,9 @@ namespace ProjectMaties {
   internal static Dictionary<string,object> NormalizeSystem(Dictionary<string,object> value) {
    var d=value??new Dictionary<string,object>();
    string locale=Text(d,"locale"),theme=Text(d,"theme"),close=Text(d,"closeBehavior");
-   return new Dictionary<string,object>{{"schemaVersion",1},{"locale",Array.IndexOf(new[]{"zh-CN","zh-TW","en","ja","fr","de","it","es"},locale)>=0?locale:"zh-CN"},{"theme",theme=="dark"||theme=="light"?theme:"system"},{"startAtLogin",d.ContainsKey("startAtLogin")&&d["startAtLogin"] is bool b&&b},{"closeBehavior",close=="minimize"||close=="quit"?close:"tray"}};
+   string language=System.Globalization.CultureInfo.CurrentUICulture.Name;
+   string initial=language.StartsWith("ja",StringComparison.OrdinalIgnoreCase)?"ja":language=="zh-CN"||language=="zh-SG"||language.StartsWith("zh-Hans",StringComparison.OrdinalIgnoreCase)?"zh-CN":"en";
+   return new Dictionary<string,object>{{"schemaVersion",2},{"locale",Array.IndexOf(new[]{"zh-CN","en","ja"},locale)>=0?locale:initial},{"theme",theme=="dark"||theme=="light"?theme:"system"},{"startAtLogin",d.ContainsKey("startAtLogin")&&d["startAtLogin"] is bool b&&b},{"closeBehavior",close=="quit"?close:"tray"}};
   }
   internal static string Text(Dictionary<string,object> d,string key,string fallback="") {return d!=null&&d.TryGetValue(key,out var v)&&v is string s?s:fallback;}
   internal static double Number(Dictionary<string,object> d,string key,double fallback){try{return d!=null&&d.TryGetValue(key,out var v)?Convert.ToDouble(v):fallback;}catch{return fallback;}}
