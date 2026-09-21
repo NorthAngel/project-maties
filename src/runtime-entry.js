@@ -36,10 +36,7 @@ if (host && role === 'settings') {
   host.on('native', runWithEngine((engine, message) => engine.native(message)));
   host.on('stop', runWithEngine(engine => engine.stop()));
   host.on('maintenance', runWithEngine((engine, value) => engine.setMaintenance(value)));
-  host.on('settings-hidden', runWithEngine(engine => {
-    if (engine.getRuntime().calibrating) return engine.controllerAction({action: 'cancel'});
-    return undefined;
-  }));
+
 
   const desktop = window.desktop && typeof window.desktop === 'object' ? window.desktop : {};
   Object.assign(desktop, {
@@ -54,8 +51,6 @@ if (host && role === 'settings') {
     getRuntime: () => runtimeReady.then(engine => engine.getRuntime()),
     onRuntime: callback => host.on('runtime', callback),
     onController: callback => host.on('controller', callback),
-    captureDesktop: () => request('desktop.preview'),
-    onDesktop: callback => host.on('desktop-preview', callback),
     windowAction: action => request('window.action', action),
     setEnabled: value => runtimeReady.then(engine => engine.setEnabled(value)),
     menu: () => request('app.menu'),

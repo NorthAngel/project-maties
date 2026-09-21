@@ -196,9 +196,10 @@ class Bridge {
    IntPtr fg=GetForegroundWindow();uint pid;uint thread=GetWindowThreadProcessId(fg,out pid);
    Point p;GetCursorPos(out p);var gui=new Gui{size=Marshal.SizeOf(typeof(Gui))};
    bool caret=GetGUIThreadInfo(thread,ref gui)&&gui.caret!=IntPtr.Zero;
-   if(caret){p.x=gui.rect.left;p.y=gui.rect.bottom;ClientToScreen(gui.caret,ref p);}
+   Point caretStart=new Point(),caretEnd=new Point();
+   if(caret){caretStart.x=gui.rect.left;caretStart.y=gui.rect.top;caretEnd.x=gui.rect.right;caretEnd.y=gui.rect.bottom;caret=ClientToScreen(gui.caret,ref caretStart)&&ClientToScreen(gui.caret,ref caretEnd);}
    bool active;lock(gate){if(((!sample.ready||input.Capture)&&!testing)||(target!=IntPtr.Zero&&fg!=target))Release();active=target!=IntPtr.Zero;}
-   Emit(new{type="state",connected=sample.connected,ready=sample.ready,slot=sample.slot,buttons=sample.buttons,x=sample.x,y=sample.y,rx=sample.rx,ry=sample.ry,device=sample.device,raw=sample.raw,target=fg.ToInt64().ToString(),pid=pid,inputLanguage=LanguageCode(GetKeyboardLayout(thread)),anchor=new{x=p.x,y=p.y},caret=caret});
+   Emit(new{type="state",connected=sample.connected,ready=sample.ready,slot=sample.slot,buttons=sample.buttons,x=sample.x,y=sample.y,rx=sample.rx,ry=sample.ry,device=sample.device,raw=sample.raw,target=fg.ToInt64().ToString(),pid=pid,inputLanguage=LanguageCode(GetKeyboardLayout(thread)),anchor=new{x=p.x,y=p.y},caret=caret,caretRect=caret?(object)new{x=caretStart.x,y=caretStart.y,width=Math.Max(2,caretEnd.x-caretStart.x),height=Math.Max(2,caretEnd.y-caretStart.y)}:null});
    Thread.Sleep(sample.connected?16:40);
   }
   }

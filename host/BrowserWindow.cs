@@ -12,18 +12,18 @@ namespace ProjectMaties {
   internal readonly WebView2CompositionControl View;
   readonly AppHost host;
   internal BrowserWindow(AppHost owner,string role) {
-   host=owner;Role=role;Title=role=="settings"?"Controller Companion":"Controller Companion · 转盘";
+   host=owner;Role=role;Title=role=="settings"?"Conroller Plus":"Conroller Plus · 转盘";
    WindowStyle=WindowStyle.None;ShowActivated=role=="settings";ShowInTaskbar=role=="settings";
-   Width=role=="settings"?1040:653;Height=role=="settings"?780:608;
-   MinWidth=role=="settings"?940:0;MinHeight=role=="settings"?700:0;
-   ResizeMode=role=="settings"?ResizeMode.CanResize:ResizeMode.NoResize;
+   Width=role=="settings"?893:768;Height=role=="settings"?917:715;
+   MinWidth=role=="settings"?893:0;MinHeight=role=="settings"?917:0;
+   ResizeMode=ResizeMode.NoResize;
    if(role=="overlay"){AllowsTransparency=true;Background=Brushes.Transparent;Topmost=true;Focusable=false;}
    else Background=new SolidColorBrush(Color.FromRgb(245,245,247));
    View=new WebView2CompositionControl{DefaultBackgroundColor=role=="overlay"?System.Drawing.Color.Transparent:System.Drawing.Color.FromArgb(245,245,247),Focusable=role=="settings",IsHitTestVisible=role=="settings"};
    Content=View;
    SourceInitialized+=(s,e)=>{var h=new WindowInteropHelper(this).Handle;HwndSource.FromHwnd(h).AddHook(WindowProc);if(role=="overlay")NativeWindows.MakeOverlay(h);};
    Closing+=(s,e)=>{if(!host.Quitting){e.Cancel=true;if(role=="settings")host.CloseSettings();}};
-   StateChanged+=(s,e)=>{if(WindowState==WindowState.Maximized)WindowState=WindowState.Normal;if(WindowState==WindowState.Minimized)host.StopInput();};
+   StateChanged+=(s,e)=>{if(WindowState==WindowState.Maximized)WindowState=WindowState.Normal;if(WindowState==WindowState.Minimized&&Role=="settings")host.HideSettings();};
   }
   IntPtr WindowProc(IntPtr hwnd,int msg,IntPtr wp,IntPtr lp,ref bool handled){if(msg==0x0312){host.StopInput();handled=true;}return IntPtr.Zero;}
   internal async Task InitializeAsync(CoreWebView2Environment environment,string webRoot) {

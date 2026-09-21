@@ -103,8 +103,6 @@
     getRuntime: () => request('runtime.get'),
     onRuntime: callback => on('runtime', callback),
     onController: callback => on('controller', callback),
-    captureDesktop: () => request('desktop.preview'),
-    onDesktop: callback => on('desktop-preview', callback),
     windowAction: action => request('window.action', action),
     setEnabled: () => Promise.reject(new Error('Settings runtime is not ready')),
     menu: () => request('app.menu'),
