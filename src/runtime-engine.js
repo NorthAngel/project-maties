@@ -1,5 +1,5 @@
 import {migrateSettings, normalizeAppearance} from './appearance.js';
-import {validMapping} from './calibration.js';
+import {deviceKey, normalizeControllerSettings, getDeviceProfile, setDeviceProfile} from './device-profiles.js';
 import {InputSession} from './session.js';
 import {PointerInput} from './pointer.js';
 
@@ -26,15 +26,6 @@ function errorMessage(error, fallback) {
   return typeof message === 'string' && message ? message : fallback;
 }
 
-function controllerConfig(value = {}) {
-  const mappings = value?.mappings && typeof value.mappings === 'object'
-    ? Object.fromEntries(Object.entries(value.mappings).filter(([guid, mapping]) => validMapping(guid, mapping)))
-    : {};
-  return {
-    preferredGuid: typeof value?.preferredGuid === 'string' ? value.preferredGuid : '',
-    mappings,
-  };
-}
 
 function inventory(value = {}) {
   return {
@@ -56,12 +47,10 @@ export class RuntimeEngine {
       controller: typeof platform.controller === 'function' ? platform.controller.bind(platform) : noOpAsync,
     };
     this.appearance = migrateSettings(bootstrap?.appearance ?? {});
-    this.controllers = controllerConfig(bootstrap?.controllers);
+    this.controllers = normalizeControllerSettings(bootstrap?.controllers);
     this.ownPid = Number.isInteger(bootstrap?.ownPid) ? bootstrap.ownPid : -1;
     this.testing = bootstrap?.testing === true;
     this.inventory = inventory();
-    this.calibrating = false;
-    this.calibrationId = null;
     this.enabled = true;
     this.maintenance = false;
     this.bridgeError = '';
@@ -73,12 +62,12 @@ export class RuntimeEngine {
   }
 
   async initialize() {
-    this.emit('appearance', this.appearance);
+    this.emit('appearance', this.getAppearance());
     try {
       await this.requestController({
         type: 'controller',
         action: 'configure',
-        config: this.getControllerConfig(),
+        config: {preferredKey:this.controllers.preferredKey},
       });
       this.publish(true);
     } catch (error) {
@@ -132,7 +121,7 @@ export class RuntimeEngine {
       selectedDevice: this.inventory.selected,
       backend: this.inventory.backend,
       warning: this.inventory.warning,
-      calibrating: this.calibrating,
+      buttons: this.lastPacket?.buttons ?? 0,
       layout: this.session.active ? this.session.layout : this.appearance.keyboardMode,
       ...this.model(this.session.radial),
       left: this.model(this.session.leftRadial),
@@ -142,7 +131,7 @@ export class RuntimeEngine {
   }
 
   getAppearance() {
-    return copy(this.appearance);
+    return copy({...this.appearance,...getDeviceProfile(this.controllers,this.lastPacket?.device)});
   }
 
   getControllerConfig() {
@@ -169,17 +158,22 @@ export class RuntimeEngine {
 
   setAppearance(value = {}) {
     const patch = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    if (!this.lastPacket?.connected) return Promise.reject(new Error('手柄未接入'));
     if (Object.keys(patch).some(key => RESETTING_APPEARANCE_KEYS.has(key))) this.stop();
-    this.appearance = normalizeAppearance({...this.appearance, ...patch});
+    const devicePatch=Object.fromEntries(Object.entries(patch).filter(([key])=>['bindings','deadzoneLeft','deadzoneRight'].includes(key)));
+    const globalPatch=Object.fromEntries(Object.entries(patch).filter(([key])=>!['bindings','deadzoneLeft','deadzoneRight'].includes(key)));
+    this.controllers=setDeviceProfile(this.controllers,this.lastPacket.device,devicePatch);
+    this.appearance=normalizeAppearance({...this.appearance,...globalPatch});
 
     let saved;
     try {
-      saved = this.platform.saveAppearance(this.getAppearance());
+      const globalSettings=Object.fromEntries(Object.entries(this.appearance).filter(([key])=>!['bindings','deadzoneLeft','deadzoneRight'].includes(key)));
+      saved = Promise.all([this.platform.saveAppearance(globalSettings),this.platform.saveControllers(this.getControllerConfig())]);
     } catch (error) {
       saved = Promise.reject(error);
     }
 
-    this.emit('appearance', this.appearance);
+    this.emit('appearance', this.getAppearance());
     if (this.session.active) this.setOverlay(true);
     this.publish(true);
 
@@ -224,20 +218,17 @@ export class RuntimeEngine {
       y: Number(packet.y) || 0,
       buttons: Number(packet.buttons) || 0,
       device: copy(packet.device),
-      raw: this.calibrating ? copy(packet.raw) : undefined,
+
     });
   }
 
   feed(packet, now) {
     if (!packet || typeof packet !== 'object' || Array.isArray(packet)) return this.getRuntime();
+    const previous=this.lastPacket;
+    if(previous?.connected&&(!packet.connected||packet.slot!==previous.slot||packet.target!==previous.target))this.stop();
     this.lastPacket = copy(packet);
+    if(deviceKey(previous?.device)!==deviceKey(packet.device)||previous?.connected!==packet.connected)this.emit('appearance',this.getAppearance());
 
-    if (this.calibrating && (!packet.connected || packet.slot !== this.calibrationId)) {
-      this.cancelCalibration().catch(error => {
-        this.bridgeError = errorMessage(error, CONTROLLER_ERROR);
-        this.publish(true);
-      });
-    }
     this.emitController(packet);
 
     const wasActive = this.session.active;
@@ -246,13 +237,12 @@ export class RuntimeEngine {
     const allowed = this.enabled
       && !this.bridgeError
       && packet.ready !== false
-      && !this.calibrating
       && !this.maintenance;
     const timestamp = Number.isFinite(now)
       ? now
       : (globalThis.performance?.now?.() ?? Date.now());
     const result = this.session.step(packet, timestamp, {
-      ...this.appearance,
+      ...this.getAppearance(),
       enabled: allowed,
       ownPid: this.ownPid,
     });
@@ -281,7 +271,7 @@ export class RuntimeEngine {
 
     const pointerPacket = {...packet, buttons: result.pointerButtons};
     const liveAppearance = {
-      ...this.appearance,
+      ...this.getAppearance(),
       keyboardMode: this.session.active ? this.session.layout : this.appearance.keyboardMode,
     };
     const events = [];
@@ -300,25 +290,14 @@ export class RuntimeEngine {
         const before = this.session.active;
         this.session.toggle(packet, this.ownPid, this.appearance);
         this.syncSession(before, packet);
+      } else if(event.type==='ime'){
+        if(packet.pid!==this.ownPid)this.send({type:'ime',action:'cycle',target:packet.target});
       } else {
         this.send({...event, action: event.type, type: 'pointer'});
       }
     }
 
     return this.publish(false, result.pulses);
-  }
-
-  async cancelCalibration() {
-    this.calibrating = false;
-    this.calibrationId = null;
-    const request = this.requestController({
-      type: 'controller',
-      action: 'capture',
-      deviceId: this.inventory.selected,
-      value: false,
-    });
-    this.stop();
-    return request;
   }
 
   async native(message) {
@@ -337,16 +316,6 @@ export class RuntimeEngine {
     }
     if (message.type === 'devices') {
       this.inventory = inventory(message);
-      if (this.calibrating && (
-        this.inventory.selected !== this.calibrationId
-        || !this.inventory.items.some(device => device.id === this.calibrationId)
-      )) {
-        try {
-          await this.cancelCalibration();
-        } catch (error) {
-          this.bridgeError = errorMessage(error, CONTROLLER_ERROR);
-        }
-      }
       return this.publish(true);
     }
     if (message.type === 'state') return this.feed(message);
@@ -359,61 +328,14 @@ export class RuntimeEngine {
 
   async controllerAction(value = {}) {
     try {
-      if (value?.action === 'cancel') {
-        await this.cancelCalibration();
-        return {ok: true};
-      }
-
-      const device = this.inventory.items.find(item => item.id === value?.id);
-      if (!device) throw new Error('手柄已断开');
-
-      if (value.action === 'select') {
-        await this.cancelCalibration();
-        await this.requestController({
-          type: 'controller',
-          action: 'select',
-          deviceId: device.id,
-        });
-        this.controllers.preferredGuid = device.guid;
-        await this.saveControllerConfig();
-      } else if (value.action === 'capture') {
-        this.stop();
-        await this.requestController({
-          type: 'controller',
-          action: 'capture',
-          deviceId: device.id,
-          value: true,
-        });
-        this.calibrating = true;
-        this.calibrationId = device.id;
-        this.publish(true);
-      } else if (value.action === 'mapping') {
-        if (value.mapping !== null && !validMapping(device.guid, value.mapping)) {
-          throw new Error('校准数据不完整');
-        }
-        await this.requestController({
-          type: 'controller',
-          action: 'mapping',
-          deviceId: device.id,
-          mapping: value.mapping,
-        });
-        this.calibrating = false;
-        this.calibrationId = null;
-        this.stop();
-        if (value.mapping === null) delete this.controllers.mappings[device.guid];
-        else this.controllers.mappings[device.guid] = value.mapping;
-        await this.saveControllerConfig();
-      } else {
-        throw new Error('未知操作');
-      }
-      return {ok: true};
-    } catch (error) {
-      try {
-        await this.cancelCalibration();
-      } catch {
-        // Preserve the error from the requested controller action.
-      }
-      return {ok: false, error: errorMessage(error, CONTROLLER_ERROR)};
-    }
+      const device=this.inventory.items.find(item=>item.id===value?.id);
+      if(value.action!=='select'||!device)throw new Error('手柄已断开');
+      this.stop();
+      await this.requestController({type:'controller',action:'select',deviceId:device.id});
+      this.controllers.preferredKey=deviceKey(device);
+      await this.saveControllerConfig();
+      this.emit('appearance',this.getAppearance());
+      return {ok:true};
+    } catch(error){return {ok:false,error:errorMessage(error,CONTROLLER_ERROR)};}
   }
 }

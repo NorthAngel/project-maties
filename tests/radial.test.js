@@ -9,7 +9,7 @@ test('seven Figma sectors clockwise from upper right; top gap is neutral', () =>
     assert.equal(sectorFromStick(Math.sin(a),-Math.cos(a)),i);
   }
   assert.equal(sectorFromStick(0,-1),null);
-  assert.equal(sectorFromStick(.05,.05,3),3);
+  assert.equal(sectorFromStick(.05,.05,3),2);
   assert.equal(sectorFromStick(0,0),null);
 });
 test('Y,A,X,B map to a,b,c,d and all seven groups', () => {

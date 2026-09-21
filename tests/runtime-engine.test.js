@@ -94,79 +94,38 @@ function openSingle(engine, start = 10, packet = {}) {
   return feed(engine, {...packet, buttons: 0}, start + 10);
 }
 
-test('constructor isolates browser engine state and configures only valid persisted mappings', async () => {
-  const controllers = {
-    preferredGuid: VALID_GUID,
-    mappings: {
-      [VALID_GUID]: VALID_MAPPING,
-      invalid: 'not-a-mapping',
-    },
-  };
-  const {engine, evidence} = await createEngine({
-    bootstrap: {
-      appearance: {opacity: 500, keyboardMode: 'single'},
-      controllers,
-      ownPid: 71,
-    },
-  });
-
-  assert.equal(engine.getAppearance().opacity, 100);
-  assert.deepEqual(engine.getControllerConfig(), {
-    preferredGuid: VALID_GUID,
-    mappings: {[VALID_GUID]: VALID_MAPPING},
-  });
-  assert.deepEqual(evidence.controller, [{
-    type: 'controller',
-    action: 'configure',
-    config: {preferredGuid: VALID_GUID, mappings: {[VALID_GUID]: VALID_MAPPING}},
-  }]);
-  assert.ok(evidence.emitted.some(({event, payload}) => event === 'appearance' && payload.opacity === 100));
-  assert.ok(evidence.emitted.some(({event}) => event === 'runtime'));
-
-  controllers.preferredGuid = 'mutated-outside';
-  const exposed = engine.getControllerConfig();
-  exposed.preferredGuid = 'mutated-copy';
-  assert.equal(engine.getControllerConfig().preferredGuid, VALID_GUID);
-  assert.deepEqual(Object.keys(engine.getRuntime()).sort(), [
-    'active', 'backend', 'calibrating', 'connected', 'device', 'devices',
-    'enabled', 'error', 'inputLanguage', 'layout', 'left', 'mode', 'right',
-    'selected', 'selectedDevice', 'shift', 'warning',
-  ]);
+test('constructor ignores old mappings and isolates new controller settings',async()=>{
+ const controllers={preferredKey:'known',profiles:{},mappings:{bad:'old'}};
+ const {engine,evidence}=await createEngine({bootstrap:{appearance:{opacity:500},controllers}});
+ assert.equal(engine.getAppearance().opacity,100);
+ assert.deepEqual(engine.getControllerConfig(),{preferredKey:'known',profiles:{}});
+ assert.deepEqual(evidence.controller[0].config,{preferredKey:'known'});
+ controllers.preferredKey='outside';
+ const copy=engine.getControllerConfig();copy.preferredKey='copy';
+ assert.equal(engine.getControllerConfig().preferredKey,'known');
 });
-
-test('single and dual activation keep the v5.5 begin, layout-change, and close behavior', async () => {
-  const {engine, evidence} = await createEngine();
-  arm(engine);
-
-  const single = openSingle(engine);
-  assert.equal(single.active, true);
-  assert.equal(single.layout, 'single');
-  assert.deepEqual(evidence.sent.at(-1), {type: 'begin', target: BASE_PACKET.target});
-  assert.equal(evidence.overlays.at(-1).active, true);
-  assert.equal(evidence.overlays.at(-1).layout, 'single');
-
-  feed(engine, {buttons: PHYSICAL.L3}, 40);
-  const closed = feed(engine, {buttons: 0}, 50);
-  assert.equal(closed.active, false);
-  assert.equal(evidence.sent.at(-1).type, 'end');
-  assert.equal(evidence.overlays.at(-1).active, false);
-
-  feed(engine, {buttons: 0}, 60);
-  feed(engine, {buttons: PHYSICAL.L3}, 100);
-  const dual = feed(engine, {buttons: PHYSICAL.L3 | PHYSICAL.R3}, 200);
-  assert.equal(dual.active, true);
-  assert.equal(dual.layout, 'dual');
-  assert.ok(evidence.sent.some(command => command.type === 'begin' && command.target === BASE_PACKET.target));
-  assert.deepEqual(evidence.sent.at(-1), {type: 'shift', value: false});
-  assert.equal(evidence.overlays.at(-1).layout, 'dual');
-
-  feed(engine, {buttons: 0}, 210);
-  feed(engine, {buttons: PHYSICAL.L3}, 300);
-  const changed = feed(engine, {buttons: 0}, 310);
-  assert.equal(changed.active, true);
-  assert.equal(changed.layout, 'single');
-  assert.ok(evidence.sent.some(command => command.type === 'shift' && command.value === false));
-  assert.equal(evidence.overlays.at(-1).layout, 'single');
+test('saved mode drives L3 and every opening initializes the configured discs',async()=>{
+ const {engine,evidence}=await createEngine();
+ arm(engine);
+ assert.equal(openSingle(engine).layout,'dual');
+ assert.equal(evidence.overlays.at(-1).active,true);
+ feed(engine,{buttons:64},40);feed(engine,{buttons:0},50);
+ assert.equal(engine.getRuntime().active,false);
+ await engine.setAppearance({keyboardMode:'single',leftDisc:1});
+ feed(engine,{buttons:0},60);
+ feed(engine,{buttons:64},70);
+ assert.equal(engine.getRuntime().layout,'single');
+ assert.equal(engine.getRuntime().mode,1);
+});
+test('device profiles remain independent through disconnect and reconnect',async()=>{
+ const {engine}=await createEngine();arm(engine);
+ await engine.setAppearance({deadzoneLeft:27});
+ feed(engine,{connected:false},10);
+ await assert.rejects(engine.setAppearance({scale:80}),/手柄未接入/);
+ feed(engine,{device:{...BASE_PACKET.device,guid:'other'},slot:'other'},20);
+ assert.equal(engine.getAppearance().deadzoneLeft,10);
+ feed(engine,{},30);
+ assert.equal(engine.getAppearance().deadzoneLeft,27);
 });
 
 test('stop and disable release native input, hide the overlay, and clear pending gestures', async () => {
@@ -174,6 +133,8 @@ test('stop and disable release native input, hide the overlay, and clear pending
     bindings: {idle: {LT: 'modifier:ctrl'}},
   });
   const {engine, evidence} = await createEngine({bootstrap: {appearance}});
+  arm(engine);
+  await engine.setAppearance({bindings:appearance.bindings});
   arm(engine);
 
   feed(engine, {buttons: PHYSICAL.LT}, 10);
@@ -200,55 +161,19 @@ test('stop and disable release native input, hide the overlay, and clear pending
   assert.equal(evidence.sent.filter(command => command.type === 'pointer' && command.action === 'modifier' && command.down).length, 1);
 });
 
-test('native inventory drives acknowledged calibration requests and cancels removed controllers', async () => {
-  const {engine, evidence} = await createEngine();
-  const device = {id: 'pad-1', guid: VALID_GUID, name: 'Test Pad', mapped: false};
-
-  await engine.native({
-    type: 'devices',
-    items: [device],
-    selected: device.id,
-    backend: 'SDL3',
-    warning: 'test-warning',
-  });
-  assert.deepEqual(engine.getRuntime().devices, [device]);
-  assert.equal(engine.getRuntime().selectedDevice, device.id);
-  assert.equal(engine.getRuntime().backend, 'SDL3');
-
-  assert.deepEqual(await engine.controllerAction({action: 'capture', id: device.id}), {ok: true});
-  assert.equal(engine.getRuntime().calibrating, true);
-  assert.deepEqual(evidence.controller.at(-1), {
-    type: 'controller',
-    action: 'capture',
-    deviceId: device.id,
-    value: true,
-  });
-
-  await engine.native({type: 'devices', items: [], selected: null, backend: 'SDL3', warning: ''});
-  assert.equal(engine.getRuntime().calibrating, false);
-  assert.deepEqual(evidence.controller.at(-1), {
-    type: 'controller',
-    action: 'capture',
-    deviceId: null,
-    value: false,
-  });
-
-  await engine.native({type: 'devices', items: [device], selected: device.id, backend: 'SDL3', warning: ''});
-  assert.deepEqual(await engine.controllerAction({action: 'mapping', id: device.id, mapping: VALID_MAPPING}), {ok: true});
-  assert.deepEqual(evidence.savedControllers.at(-1), {
-    preferredGuid: '',
-    mappings: {[VALID_GUID]: VALID_MAPPING},
-  });
-  assert.deepEqual(engine.getControllerConfig().mappings, {[VALID_GUID]: VALID_MAPPING});
-
-  assert.deepEqual(await engine.controllerAction({action: 'select', id: device.id}), {ok: true});
-  assert.equal(engine.getControllerConfig().preferredGuid, VALID_GUID);
-  assert.equal(evidence.savedControllers.at(-1).preferredGuid, VALID_GUID);
-
-  await engine.native({type: 'error', message: 'service-down'});
-  assert.equal(engine.getRuntime().error, 'service-down');
-  await engine.native({type: 'service-ready'});
-  assert.equal(engine.getRuntime().error, '');
+test('native inventory supports selection and rejects removed calibration commands',async()=>{
+ const {engine,evidence}=await createEngine();
+ const device=BASE_PACKET.device;
+ await engine.native({type:'devices',items:[device],selected:device.id,backend:'SDL3'});
+ assert.deepEqual(engine.getRuntime().devices,[device]);
+ assert.equal((await engine.controllerAction({action:'capture',id:device.id})).ok,false);
+ assert.equal((await engine.controllerAction({action:'select',id:device.id})).ok,true);
+ assert.equal(evidence.controller.at(-1).action,'select');
+ assert.ok(engine.getControllerConfig().preferredKey);
+ await engine.native({type:'error',message:'service-down'});
+ assert.equal(engine.getRuntime().error,'service-down');
+ await engine.native({type:'service-ready'});
+ assert.equal(engine.getRuntime().error,'');
 });
 
 test('own process cannot activate or cycle IME while a foreign target preserves triple-R3 behavior', async () => {
@@ -286,13 +211,14 @@ test('appearance and controller persistence failures are returned to their calle
     },
   });
 
+  arm(engine);
   await assert.rejects(engine.setAppearance({opacity: 60}), /disk-full/);
   assert.equal(engine.getAppearance().opacity, 60);
   assert.equal(engine.getRuntime().error, '设置未能保存');
 
   const device = {id: 'pad-1', guid: VALID_GUID, name: 'Test Pad'};
   await engine.native({type: 'devices', items: [device], selected: device.id, backend: 'SDL3', warning: ''});
-  const result = await engine.controllerAction({action: 'mapping', id: device.id, mapping: VALID_MAPPING});
+  const result = await engine.controllerAction({action: 'select', id: device.id});
   assert.deepEqual(result, {ok: false, error: 'disk-full'});
 });
 
@@ -434,6 +360,7 @@ test('settings runtime entry keeps the legacy API names and routes engine/native
     ]) assert.equal(typeof desktop[name], 'function', `${name} remains available`);
 
     assert.equal((await desktop.getAppearance()).opacity, 25);
+    for (const callback of listeners.get('native')) await callback(BASE_PACKET);
     assert.equal((await desktop.setAppearance({opacity: 35})).opacity, 35);
     assert.equal((await desktop.setEnabled(false)).enabled, false);
     assert.deepEqual(await desktop.getSystem(), {ok: true});

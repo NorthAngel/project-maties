@@ -5,48 +5,13 @@ import {DualActivation} from '../src/activation.js';
 const L3=64;
 const R3=128;
 
-test('L3 solo is delayed until release or the inclusive 300 ms deadline',()=>{
+test('L3 toggles on its own edge without a chord delay',()=>{
  const g=new DualActivation();
- assert.equal(g.step(L3,0).layout,null);
- assert.equal(g.step(L3,299).layout,null);
- assert.equal(g.step(L3,300).layout,'single');
- assert.equal(g.step(L3,301).layout,null);
-
- const released=new DualActivation();
- assert.equal(released.step(L3,100).layout,null);
- assert.equal(released.step(0,120).layout,'single');
-});
-
-test('L3 and R3 edges in either order form a dual gesture through exactly 300 ms',()=>{
- for(const first of [L3,R3]){
-  for(const delta of [0,299,300]){
-   const g=new DualActivation();
-   g.step(first,0);
-   const out=g.step(L3|R3,delta);
-   assert.equal(out.layout,'dual',`first=${first} delta=${delta}`);
-   assert.equal(out.pointerButtons&(R3|L3),0);
-  }
- }
- const late=new DualActivation();
- late.step(L3,0);
- assert.equal(late.step(L3|R3,301).layout,'single');
- assert.equal(late.step(L3|R3,301).pointerButtons&R3,0);
- const nonOverlap=new DualActivation();
- nonOverlap.step(R3,0);
- nonOverlap.step(0,20);
- nonOverlap.step(0,21);
- assert.equal(nonOverlap.step(L3,300).layout,null);
-});
-
-test('a consumed chord stays consumed until both sticks are released',()=>{
- const g=new DualActivation();
- assert.equal(g.step(L3,0).pointerButtons&R3,0);
- assert.equal(g.step(L3|R3,100).layout,'dual');
- assert.equal(g.step(L3|R3,700).layout,null);
- assert.equal(g.step(L3,701).pointerButtons&R3,0);
- assert.equal(g.step(0,702).tapR3,false);
- g.step(0,703);
- assert.equal(g.step(R3,800).pointerButtons&R3,0);
+ assert.equal(g.step(L3,0).toggle,true);
+ assert.equal(g.step(L3,300).toggle,false);
+ assert.equal(g.step(L3|R3,400).toggle,false);
+ g.step(R3,500);
+ assert.equal(g.step(L3|R3,510).toggle,true);
 });
 
 test('R3 triple short press switches IME without leaking a middle click',()=>{

@@ -34,6 +34,9 @@ internal sealed class ControllerInput : IDisposable {
  long nextRefresh;
  uint selected;
  string preferredGuid = "";
+ string preferredKey = "", rememberedId = "";
+ bool selectionEstablished;
+ static string Identity(ControllerDevice d){if(d==null)return "";var json=new System.Web.Script.Serialization.JavaScriptSerializer();if(!String.IsNullOrEmpty(d.serial))return json.Serialize(new[]{d.guid,"serial",d.serial});if(!String.IsNullOrEmpty(d.path))return json.Serialize(new[]{d.guid,"path",d.path});return json.Serialize(new[]{d.backend??"","model",d.backend=="XInput"?"xinput":d.guid});}
  public bool IsSdl { get; private set; }
  public bool Capture { get; private set; }
  public string Warning { get; private set; }
@@ -85,6 +88,7 @@ internal sealed class ControllerInput : IDisposable {
    device.mapped = gamepad != IntPtr.Zero;
   }
   Current = device;
+  if(device!=null){selectionEstablished=true;rememberedId=device.id;preferredKey=Identity(device);}
  }
  public void Refresh() {
   var devices = new List<ControllerDevice>();
@@ -103,8 +107,12 @@ internal sealed class ControllerInput : IDisposable {
   }
   Devices = devices;
   ControllerDevice next = Current==null?null:devices.Find(d=>d.id==Current.id);
-  if(next==null && preferredGuid!="")next=devices.Find(d=>d.guid==preferredGuid);
-  if(next==null)next=devices.Find(d=>d.mapped)??(devices.Count>0?devices[0]:null);
+  if(next==null&&preferredKey!=""){
+   var matches=devices.FindAll(d=>Identity(d)==preferredKey);
+   next=matches.Find(d=>d.id==rememberedId);
+   if(next==null&&matches.Count==1&&(matches[0].backend!="XInput"||rememberedId==""||matches[0].id==rememberedId))next=matches[0];
+  }
+  if(next==null&&!selectionEstablished&&preferredKey=="")next=devices.Find(d=>d.mapped)??(devices.Count>0?devices[0]:null);
   if(Current==null || next==null || next.id!=Current.id)OpenSelected(next);
   else { Current=next; if(IsSdl){if(!next.mapped&&gamepad!=IntPtr.Zero){Sdl.SDL_CloseGamepad(gamepad);gamepad=IntPtr.Zero;}if(gamepad==IntPtr.Zero&&next.mapped)gamepad=Sdl.SDL_OpenGamepad(selected);} }
   nextRefresh=clock.ElapsedMilliseconds+250;
@@ -112,6 +120,7 @@ internal sealed class ControllerInput : IDisposable {
  public void Configure(Dictionary<string,object> value) {
   object mapValue, preference;
   preferredGuid=value.TryGetValue("preferredGuid",out preference)?Convert.ToString(preference):"";
+  preferredKey=value.TryGetValue("preferredKey",out preference)?Convert.ToString(preference):preferredKey;
   mappings.Clear();
   if(value.TryGetValue("mappings",out mapValue)) {
    var map=mapValue as Dictionary<string,object>;

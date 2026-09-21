@@ -7,39 +7,12 @@ const packet={connected:true,slot:0,buttons:0,x:.8,y:-.8,rx:.8,ry:-.8,target:'10
 const dualPreview=normalizeAppearance({keyboardMode:'dual'});
 function setup(settings=dualPreview){const s=new InputSession();s.step(packet,0,settings);s.step(packet,1,settings);return s;}
 
-test('L3 always enters single regardless of the stored preview mode',()=>{
- const s=setup(dualPreview);
- const pending=s.step({...packet,buttons:B.toggle},10,dualPreview);
- assert.equal(pending.toggled,false);
- assert.equal(pending.layout,'single');
- const opened=s.step({...packet,buttons:0},20,dualPreview);
- assert.equal(opened.toggled,true);
- assert.equal(s.active,true);
- assert.equal(s.layout,'single');
- assert.equal(opened.imeSwitch,false);
-});
-
-test('dual activation changes layout while preserving target and same layout closes',()=>{
+test('L3 uses saved dual mode immediately; next press closes',()=>{
  const s=setup();
- s.step({...packet,buttons:B.toggle},0,dualPreview);
- s.step({...packet,buttons:B.toggle|B.R3},100,dualPreview);
- assert.equal(s.active,true);
- assert.equal(s.layout,'dual');
- assert.equal(s.target,'100');
-
- s.step({...packet,buttons:0},101,dualPreview);
- s.step({...packet,buttons:B.toggle},200,dualPreview);
- s.step({...packet,buttons:B.toggle},500,dualPreview);
- assert.equal(s.active,true);
- assert.equal(s.layout,'single');
- assert.equal(s.target,'100');
-
- s.step({...packet,buttons:0},501,dualPreview);
- s.step({...packet,buttons:B.toggle},600,dualPreview);
- s.step({...packet,buttons:B.toggle|B.R3},700,dualPreview);
- s.step({...packet,buttons:0},701,dualPreview);
- s.step({...packet,buttons:B.toggle|B.R3},800,dualPreview);
- s.step({...packet,buttons:0},801,dualPreview);
+ assert.equal(s.step({...packet,buttons:64},10,dualPreview).toggled,true);
+ assert.equal(s.layout,'dual');assert.equal(s.target,'100');
+ s.step(packet,20,dualPreview);
+ s.step({...packet,buttons:64},30,dualPreview);
  assert.equal(s.active,false);
 });
 

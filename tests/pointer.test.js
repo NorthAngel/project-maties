@@ -41,11 +41,12 @@ test('scroll integration is timing independent and diagonal axes stay independen
  assert.ok(Math.abs(a.horizontal-b.horizontal)<Math.max(30,a.horizontal*.25));
 });
 
-test('cursor speed keeps the 6400 maximum and whole-number motion',()=>{
- const c=normalizeAppearance({keyboardMode:'single',mouseSpeed:6400});
- assert.equal(c.mouseSpeed,6400);
- assert.equal(normalizeAppearance({mouseSpeed:99999}).mouseSpeed,6400);
+test('cursor speed keeps the 8000 maximum and whole-number motion',()=>{
+ const c=normalizeAppearance({keyboardMode:'single',mouseSpeed:8000});
+ assert.equal(c.mouseSpeed,8000);
+ assert.equal(normalizeAppearance({mouseSpeed:99999}).mouseSpeed,8000);
  const p=pointer(false,c);
  const move=p.step({...base,x:1},false,c,76).find(e=>e.type==='move');
- assert.deepEqual(move,{type:'move',dx:384,dy:0});
+ assert.deepEqual(move,{type:'move',dx:480,dy:0});
 });
+

@@ -1,6 +1,4 @@
-// L3/R3 gesture recognition is independent from the saved preview layout.
-// L3 is held briefly while a possible L3+R3 chord is resolved. R3 is held
-// briefly while a possible three-tap IME gesture is resolved.
+// L3 toggles immediately. R3 retains the existing 600 ms triple-tap arbitration.
 export const L3_BUTTON=64;
 export const R3_BUTTON=128;
 export const CHORD_WINDOW_MS=300;
@@ -43,39 +41,13 @@ export class DualActivation {
    this.r3Sequence=[];
   }
 
-  if(newLeft)this.leftTime=current;
+  if(newLeft)toggle=true;
   if(newRight){
    this.rightTime=current;
    this.r3DownAt=current;
    this.r3Forwarded=false;
    if(!this.r3Sequence.length&&!this.pendingTapCount)this.tapReadyAt=current+R3_TRIPLE_WINDOW_MS;
    else if(this.tapReadyAt===null)this.tapReadyAt=current+R3_TRIPLE_WINDOW_MS;
-  }
-
-  // Check the chord before resolving the L3 timeout. This keeps the 300 ms
-  // boundary available to the second press, regardless of press order.
-  if(!this.consumed&&left&&right&&(newLeft||newRight)&&this.leftTime!==null&&this.rightTime!==null&&Math.abs(this.leftTime-this.rightTime)<=CHORD_WINDOW_MS){
-   this.consumed=true;
-   this.leftResolved=true;
-   this.r3Sequence=[];
-   this.pendingTapCount=0;
-   this.tapReadyAt=null;
-   this.r3Forwarded=false;
-   layout='dual';
-   toggle=true;
-  }
-
-  if(!this.consumed&&!toggle){
-   // L3 solo activation waits for release or the exact 300 ms deadline.
-   if(left&&!this.leftResolved&&this.leftTime!==null&&current-this.leftTime>=CHORD_WINDOW_MS){
-    this.leftResolved=true;
-    layout='single';
-    toggle=true;
-   }else if(releasedLeft&&!this.leftResolved&&this.leftTime!==null){
-    this.leftResolved=true;
-    layout='single';
-    toggle=true;
-   }
   }
 
   if(releasedRight&&!this.consumed&&this.r3DownAt!==null){

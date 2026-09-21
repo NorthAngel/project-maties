@@ -1,4 +1,5 @@
 import {actionsDown} from './controls.js';
+import {RepeatActions} from './repeat-actions.js';
 
 // Cursor motion remains time based so a slow or fast controller poll does not
 // change the configured maximum speed. Wheel motion uses the same integration
@@ -8,6 +9,7 @@ export class PointerInput {
 
  reset(){
   this.previous=new Set();
+  this.repeat=new RepeatActions();
   this.lastTime=null;
   this.mode=null;
   this.fx=0;
@@ -72,6 +74,7 @@ export class PointerInput {
   if(this.mode!==mode){
    events.push(...this.releases());
    this.previous.clear();
+   this.repeat.reset();
    this.fx=this.fy=this.scroll=this.scrollY=0;
    this.scrollVelocityX=this.scrollVelocityY=0;
    this.scrollRemainderX=this.scrollRemainderY=0;
@@ -80,14 +83,18 @@ export class PointerInput {
   }
   const down=actionsDown(p.buttons,settings.bindings,mode,settings.auxiliaryBindings);
   if(this.armed){
+   const repeatable=new Set(['key:space','key:backspace','key:enter','key:left','key:right','key:up','key:down']);
+   const fired=this.repeat.step(down,now,repeatable);
    for(const action of new Set([...down,...this.previous])){
     if(down.has(action)!==this.previous.has(action)){
      const event=this.transition(action,down.has(action));
      if(event)events.push(event);
     }
-    if(down.has(action)&&!this.previous.has(action)){
+    if(fired.has(action)){
      if(action.startsWith('key:'))events.push({type:'key',key:action.slice(4)});
      if(action==='app:keyboard')events.push({type:'keyboard'});
+     if(action==='ime')events.push({type:'ime'});
+     if(!active&&['space','enter','backspace'].includes(action))events.push({type:'key',key:action});
     }
    }
    this.previous=down;
@@ -99,7 +106,7 @@ export class PointerInput {
   const x=Number(active?p.rx:p.x)||0;
   const y=Number(active?p.ry:p.y)||0;
   const magnitude=Math.hypot(x,y);
-  const deadzone=Math.max(0,Math.min(1,(Number(settings.deadzone)||0)/100));
+  const deadzone=Math.max(0,Math.min(.4,Number(active?settings.deadzoneRight:settings.deadzoneLeft)/100||0));
   if(magnitude>deadzone){
    const speed=Math.pow(Math.min(1,(magnitude-deadzone)/(1-deadzone)),1.65)*(Number(settings.mouseSpeed)||0)*dt;
    this.fx+=x/magnitude*speed;
@@ -111,8 +118,9 @@ export class PointerInput {
 
   if(!active){
    const scrollSpeed=Math.max(0,Number(settings.scrollSpeed)||0);
-   const horizontal=this.smoothScroll('horizontal',Number(p.rx)||0,deadzone,dt,scrollSpeed);
-   const vertical=this.smoothScroll('vertical',-(Number(p.ry)||0),deadzone,dt,scrollSpeed);
+   const scrollDeadzone=Math.max(0,Math.min(.4,Number(settings.deadzoneRight)/100||0));
+   const horizontal=this.smoothScroll('horizontal',Number(p.rx)||0,scrollDeadzone,dt,scrollSpeed);
+   const vertical=this.smoothScroll('vertical',-(Number(p.ry)||0),scrollDeadzone,dt,scrollSpeed);
    if(horizontal)events.push({type:'scroll',delta:horizontal});
    if(vertical)events.push({type:'scroll',axis:'vertical',delta:vertical});
   }else{

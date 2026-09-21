@@ -35,8 +35,8 @@ class Bridge {
  static IntPtr target=IntPtr.Zero; static bool shift;
  static readonly HashSet<string> mouseHeld=new HashSet<string>();
  static readonly HashSet<string> modifierOwners=new HashSet<string>();
- static void Modifier(string key,string owner,bool down){ushort vk=key=="ctrl"?(ushort)17:(ushort)16;string token=key+":"+owner;bool before=false;foreach(string item in modifierOwners)if(item.StartsWith(key+":"))before=true;if(down)modifierOwners.Add(token);else modifierOwners.Remove(token);bool after=false;foreach(string item in modifierOwners)if(item.StartsWith(key+":"))after=true;if(before!=after)Send(Key(vk,0,after?0u:2u));}
- static void ReleaseModifiers(){bool ctrl=false,shifted=false;foreach(string item in modifierOwners){if(item.StartsWith("ctrl:"))ctrl=true;if(item.StartsWith("shift:"))shifted=true;}if(ctrl)Send(Key(17,0,2));if(shifted)Send(Key(16,0,2));modifierOwners.Clear();shift=false;}
+ static void Modifier(string key,string owner,bool down){ushort vk=key=="ctrl"?(ushort)17:key=="alt"?(ushort)18:key=="win"?(ushort)91:(ushort)16;string token=key+":"+owner;bool before=false;foreach(string item in modifierOwners)if(item.StartsWith(key+":"))before=true;if(down)modifierOwners.Add(token);else modifierOwners.Remove(token);bool after=false;foreach(string item in modifierOwners)if(item.StartsWith(key+":"))after=true;if(before!=after)Send(Key(vk,0,after?0u:2u));}
+ static void ReleaseModifiers(){foreach(string key in new[]{"ctrl","shift","alt","win"}){bool held=false;foreach(string item in modifierOwners)if(item.StartsWith(key+":"))held=true;if(held)Send(Key(key=="ctrl"?(ushort)17:key=="alt"?(ushort)18:key=="win"?(ushort)91:(ushort)16,0,2));}modifierOwners.Clear();shift=false;}
  static void Emit(object value){lock(output){Console.WriteLine(json.Serialize(value));Console.Out.Flush();}}
  static Input Key(ushort vk,ushort scan,uint flags){return new Input{type=1,data=new Union{keyboard=new Keyboard{vk=vk,scan=scan,flags=flags}}};}
  static bool Send(params Input[] keys){bool ok=SendInput((uint)keys.Length,keys,Marshal.SizeOf(typeof(Input)))==keys.Length;if(!ok)Emit(new{type="error",message="系统未接受输入，请检查目标窗口权限"});return ok;}
@@ -145,7 +145,7 @@ class Bridge {
    if(action=="move"){int dx=Math.Max(-512,Math.Min(512,Convert.ToInt32(c["dx"]))),dy=Math.Max(-512,Math.Min(512,Convert.ToInt32(c["dy"])));Send(MouseEvent(1,dx,dy));}
    if(action=="scroll")Send(MouseEvent(c.ContainsKey("axis")&&Convert.ToString(c["axis"])=="vertical"?0x0800u:0x1000u,0,0,Math.Max(-1920,Math.Min(1920,Convert.ToInt32(c["delta"])))));
    if(action=="button"){string b=Convert.ToString(c["button"]);if(b!="left"&&b!="right"&&b!="middle")return;bool down=Convert.ToBoolean(c["down"]);if(mouseHeld.Contains(b)!=down&&Send(MouseEvent(MouseFlag(b,down)))){if(down)mouseHeld.Add(b);else mouseHeld.Remove(b);}}
-   if(action=="modifier"){string key=Convert.ToString(c["key"]);if(key=="ctrl"||key=="shift")Modifier(key,"pointer",Convert.ToBoolean(c["down"]));}
+   if(action=="modifier"){string key=Convert.ToString(c["key"]);if(key=="ctrl"||key=="shift"||key=="alt"||key=="win")Modifier(key,"pointer",Convert.ToBoolean(c["down"]));}
    if(action=="key"){
     string key=Convert.ToString(c["key"]);var keys=new Dictionary<string,ushort>{{"tab",9},{"escape",27},{"delete",46},{"left",37},{"up",38},{"right",39},{"down",40},{"home",36},{"end",35},{"space",32},{"backspace",8},{"enter",13},{"copy",67},{"paste",86},{"undo",90},{"mediaNext",176},{"mediaPrevious",177},{"mediaPlay",179}};
     for(char k='a';k<='z';k++)keys[k.ToString()]=(ushort)char.ToUpperInvariant(k);for(char k='0';k<='9';k++)keys[k.ToString()]=(ushort)k;for(int i=1;i<=12;i++)keys["f"+i]=(ushort)(111+i);
