@@ -31,7 +31,7 @@ namespace ProjectMaties
 
         private static readonly string[] RequiredReleaseFiles =
         {
-            "ControllerCompanion.exe",
+            "ConrollerPlus.exe",
             "Microsoft.Web.WebView2.Core.dll",
             "Microsoft.Web.WebView2.Wpf.dll",
             "WebView2Loader.dll",
@@ -204,7 +204,7 @@ namespace ProjectMaties
             }
         }
 
-        public static ReleaseInfo VerifyRelease(string directory, string currentVersion)
+        public static ReleaseInfo VerifyRelease(string directory, string currentVersion, bool allowSameVersion = false)
         {
             string root = NormalizeRoot(directory, "update-manifest");
             if (!Directory.Exists(root))
@@ -240,14 +240,14 @@ namespace ProjectMaties
                 throw Error("update-manifest");
             }
 
-            if (!StringValue(manifest, "product").Equals("ControllerCompanion", StringComparison.Ordinal) ||
+            if (!StringValue(manifest, "product").Equals("ConrollerPlus", StringComparison.Ordinal) ||
                 !StringValue(manifest, "host").Equals("webview2", StringComparison.Ordinal))
             {
                 throw Error("update-product");
             }
 
             string version = StringValue(manifest, "version");
-            if (!IsNewerVersion(version, currentVersion))
+            if (!IsNewerVersion(version, currentVersion) && !(allowSameVersion && version == currentVersion))
             {
                 throw Error("update-not-newer");
             }
@@ -307,7 +307,7 @@ namespace ProjectMaties
                 }
             }
 
-            string executable = Path.Combine(root, "ControllerCompanion.exe");
+            string executable = Path.Combine(root, "ConrollerPlus.exe");
             if (!IsX64PortableExecutable(executable))
             {
                 throw Error("update-product");

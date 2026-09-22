@@ -15,3 +15,12 @@ html{background:transparent}.window-bar{height:34px;display:flex;align-items:cen
 
 /* Conroller Plus: desktop wheels never accept pointer input. */
 .disc-layer{transition:none}.wheel,.wheel *{pointer-events:none!important;cursor:default!important}.letter:hover::before{opacity:0}.wheel-mode .drag-zone{display:none!important}
+
+/* Figma GLASS is absent from SVG exports: retain the source path and add its backdrop. */
+.glass-surface{position:absolute;inset:0;backdrop-filter:blur(var(--glass-blur,22px));background:linear-gradient(104deg,rgba(255,255,255,calc(var(--glass-light,.72)*.16)),transparent 32%,transparent 70%,rgba(255,255,255,calc(var(--glass-light,.72)*.22)))}
+.plate>svg:not(.selection-outline){position:relative}
+.plate svg path[stroke]{stroke-width:1;shape-rendering:geometricPrecision}
+.plate svg path[fill]{shape-rendering:geometricPrecision}
+
+.glass-surface{backdrop-filter:none;background:none;overflow:hidden}
+.glass-surface::before{content:'';position:absolute;inset:0;backdrop-filter:blur(var(--glass-blur,22px));background:linear-gradient(104deg,rgba(255,255,255,calc(var(--glass-light,.72)*.16)),transparent 32%,transparent 70%,rgba(255,255,255,calc(var(--glass-light,.72)*.22)))}

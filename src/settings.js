@@ -12,10 +12,15 @@ const call=(method,...args)=>typeof desktop[method]==='function'?desktop[method]
 let appearance=normalizeAppearance(),system=normalizeSystem(),runtime={connected:false},bindMode='idle',previewDisc=0;
 const right=await createWheel($('#sectors')),left=await createWheel($('#preview-left'));
 const t=key=>text(system.locale,key),actionText=key=>bindingText(system.locale,key);
-const iconKey=key=>({Up:'up',Down:'down',Left:'left',Right:'right'})[key]??key;
+const iconKey=key=>{
+ if(runtime.device?.kind==='playstation'&&['A','B','X','Y','LB','RB','LT','RT'].includes(key))return 'ps-'+key;
+ if(runtime.device?.kind==='nintendo'&&['A','B','X','Y'].includes(key))return ({A:'B',B:'A',X:'Y',Y:'X'})[key];
+ return ({Up:'up',Down:'down',Left:'left',Right:'right'})[key]??key;
+};
 function setIcon(el,name){
- const asset=FIGMA_ASSETS[name];if(!asset)return;
- el.dataset.sourceNode=asset.nodeId;
+ const asset=FIGMA_ASSETS[name]??(name.startsWith('ps-')?{src:'./assets/controller-icons/'+name+'.svg'}:null);if(!asset)return;
+ el.dataset.sourceNode=asset.nodeId??'';
+ el.classList.add('source-icon');
  if(asset.src.endsWith('.png')){
   const id='icon-'+name;el.style.background='transparent';
   el.innerHTML='<svg viewBox="0 0 '+asset.width+' '+asset.height+'" width="100%" height="100%"><defs><filter id="'+id+'" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 -2 0 0 2" result="shape"/><feFlood flood-color="var(--accent)" result="paint"/><feComposite in="paint" in2="shape" operator="in"/></filter></defs><image href="'+asset.src+'" width="'+asset.width+'" height="'+asset.height+'" filter="url(#'+id+')"/></svg>';
@@ -45,7 +50,7 @@ function renderBindings(){
  for(const [key,[x,y]]of Object.entries(locations)){const group=document.createElement('div');group.className='diagram-key';group.style.left=x+'px';group.style.top=y+'px';const icon=document.createElement('i');setIcon(icon,iconKey(key));const label=document.createElement('span');label.textContent=actionText(appearance.bindings[bindMode][key]);group.append(icon,label);diagram.append(group);}
 }
 function renderPreview(){
- const dual=appearance.keyboardMode==='dual';const holder=$('.preview-wheels');holder.classList.toggle('dual',dual);holder.style.transform='scale('+(.58*appearance.scale/100)+')';holder.style.left=dual?'-227px':'-3px';
+ const dual=appearance.keyboardMode==='dual';const holder=$('.preview-wheels');holder.classList.toggle('dual',dual);holder.style.transform='scale('+(.701*appearance.scale/100)+')';holder.style.left=dual?'-335px':'-50px';holder.style.setProperty('--preview-factor',.701*appearance.scale/100);holder.style.setProperty('--preview-origin',dual?'-335px':'-50px');
  const fallback={mode:previewDisc,selected:null,shift:false};right.update(runtime.active?(runtime.right??runtime):fallback);left.update(runtime.active?(runtime.left??fallback):{...fallback,mode:appearance.leftDisc});
  for(const pulse of runtime.pulses??[])(pulse.side==='left'?left:right).pulse(pulse.side==='left'?runtime.left:runtime.right??runtime,pulse.slot);
  if(runtime.pulses?.length)setTimeout(()=>$$('.pulse').forEach(el=>el.classList.remove('pulse')),80);
@@ -60,7 +65,9 @@ function deviceView(){
 function render(){
  document.documentElement.lang=system.locale;
  applyTheme(system.theme);if(system.theme==='system'&&system.resolvedTheme)document.documentElement.dataset.theme=system.resolvedTheme;
+ $('.language-active').src='assets/figma-ui/language-active'+(document.documentElement.dataset.theme==='dark'?'-dark':'')+'.svg';
  applyWheelStyle(appearance);
+ document.documentElement.style.setProperty('--thumb-alpha',.12+.73*appearance.opacity/100);
  $$('[data-copy]').forEach(el=>el.textContent=t(el.dataset.copy));
  $('[data-tab="appearance"]').firstChild.textContent=t('appearance')+' ';
  $('[data-tab="controller"]').textContent=t('controller');$('[data-action="start"]').textContent=t('start');
@@ -96,7 +103,7 @@ async function maintenance(action,button){
   notice(t('checking'));
   const result=await call('systemAction',{action});
   $('#notice').hidden=true;
-  if(!result.ok){showMessage(button,t(action==='diagnose'?'repair':'update'),result.error??t('failed'));return;}
+  if(!result.ok){showMessage(button,t(action==='diagnose'?'repair':'update'),result.error??t(result.code??'failed'));return;}
   if(action==='check-update'){
    $('#update-dot').hidden=!result.available;
    showMessage(button,t('update'),result.available?'Conroller Plus '+result.version:t('latest'),result.available?[{label:t('download'),run:()=>maintenance('download-update',button)}]:[]);

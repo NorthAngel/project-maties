@@ -18,9 +18,10 @@ namespace ProjectMaties {
    MinWidth=role=="settings"?893:0;MinHeight=role=="settings"?917:0;
    ResizeMode=ResizeMode.NoResize;
    if(role=="overlay"){AllowsTransparency=true;Background=Brushes.Transparent;Topmost=true;Focusable=false;}
-   else Background=new SolidColorBrush(Color.FromRgb(245,245,247));
-   View=new WebView2CompositionControl{DefaultBackgroundColor=role=="overlay"?System.Drawing.Color.Transparent:System.Drawing.Color.FromArgb(245,245,247),Focusable=role=="settings",IsHitTestVisible=role=="settings"};
+   else {AllowsTransparency=true;Background=Brushes.Transparent;}
+   View=new WebView2CompositionControl{DefaultBackgroundColor=System.Drawing.Color.Transparent,Focusable=role=="settings",IsHitTestVisible=role=="settings"};
    Content=View;
+   if(role=="settings"){View.Clip=new RectangleGeometry(new Rect(0,0,Width,Height),20,20);SizeChanged+=(s,e)=>View.Clip=new RectangleGeometry(new Rect(0,0,ActualWidth,ActualHeight),20,20);}
    SourceInitialized+=(s,e)=>{var h=new WindowInteropHelper(this).Handle;HwndSource.FromHwnd(h).AddHook(WindowProc);if(role=="overlay")NativeWindows.MakeOverlay(h);};
    Closing+=(s,e)=>{if(!host.Quitting){e.Cancel=true;if(role=="settings")host.CloseSettings();}};
    StateChanged+=(s,e)=>{if(WindowState==WindowState.Maximized)WindowState=WindowState.Normal;if(WindowState==WindowState.Minimized&&Role=="settings")host.HideSettings();};

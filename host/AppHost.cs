@@ -13,7 +13,7 @@ using Microsoft.Win32;
 using Forms=System.Windows.Forms;
 namespace ProjectMaties {
  internal sealed class AppHost {
-  internal const string Version="1.0.0";
+  internal const string Version="1.1.0";
   internal bool Testing {get;private set;}
   internal bool Quitting {get;private set;}
   readonly string root=AppDomain.CurrentDomain.BaseDirectory;
@@ -22,6 +22,7 @@ namespace ProjectMaties {
   BrowserWindow settings,overlay;
   NativeService native;
   Forms.NotifyIcon tray;
+  TrayMenuWindow trayMenu;
   Icon trayImage;
   Dictionary<string,object> appearance,controllers,system,runtime=new Dictionary<string,object>();
   readonly WindowLifecycle lifecycle=new WindowLifecycle();
@@ -49,11 +50,9 @@ namespace ProjectMaties {
    try{await native.StartAsync(controllers);nativeReady.TrySetResult(true);}catch(Exception ex){nativeReady.TrySetResult(false);Emit("native",new{type="error",message=ex.Message});}
    trayImage=new Icon(Path.Combine(root,"web","assets","app-icon.ico"));
    tray=new Forms.NotifyIcon{Icon=trayImage,Text="Conroller Plus",Visible=true};
-   tray.MouseClick+=(s,e)=>{if(e.Button==Forms.MouseButtons.Left)app.Dispatcher.BeginInvoke(new Action(OpenSettings));};
-   var menu=new Forms.ContextMenuStrip();
-   menu.Items.Add("Conroller Plus",null,(s,e)=>app.Dispatcher.BeginInvoke(new Action(OpenSettings)));
-   menu.Items.Add("Exit",null,(s,e)=>app.Dispatcher.BeginInvoke(new Action(async()=>await QuitAsync())));
-   tray.ContextMenuStrip=menu;UpdateTray();
+   trayMenu=new TrayMenuWindow(OpenSettings,()=>{var unused=QuitAsync();});
+   tray.MouseClick+=(s,e)=>app.Dispatcher.BeginInvoke(new Action(()=>{if(e.Button==Forms.MouseButtons.Left)OpenSettings();else if(e.Button==Forms.MouseButtons.Right)trayMenu.Open(HostPolicy.Text(system,"locale","en"),ResolvedTheme()=="dark");}));
+   UpdateTray();
    SystemEvents.UserPreferenceChanged+=PreferenceChanged;
    if(showSettings||Testing)OpenSettings();
   }
@@ -133,13 +132,13 @@ namespace ProjectMaties {
   }
   void SetLogin(bool enabled){if(Testing)return;using(var key=Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")){if(enabled)key.SetValue("ConrollerPlus","\""+Path.Combine(root,"ConrollerPlus.exe")+"\" --background");else key.DeleteValue("ConrollerPlus",false);}}
   internal void BrowserFailed(string reason){StopInput();File.WriteAllText(Path.Combine(data,"host-error.log"),"WebView2: "+reason);MessageBox.Show("界面组件已停止。请重新打开软件。\n"+reason,"Conroller Plus");var unused=QuitAsync();}
-  internal async Task QuitAsync(){if(Quitting)return;StopInput();Quitting=true;SystemEvents.UserPreferenceChanged-=PreferenceChanged;tray?.Dispose();trayImage?.Dispose();if(native!=null){try{await native.StopAsync();}finally{native.Dispose();}}overlay?.DisposeBrowser();settings?.DisposeBrowser();app.Shutdown();}
+  internal async Task QuitAsync(){if(Quitting)return;StopInput();Quitting=true;SystemEvents.UserPreferenceChanged-=PreferenceChanged;tray?.Dispose();trayImage?.Dispose();trayMenu?.Close();if(native!=null){try{await native.StopAsync();}finally{native.Dispose();}}overlay?.DisposeBrowser();settings?.DisposeBrowser();app.Shutdown();}
   async Task<object> SystemAction(Dictionary<string,object> value){
    string action=HostPolicy.Text(value,"action");
    if(maintenanceBusy)return new{ok=false,code="maintenance-busy"};
    if(action=="quit"){var scheduled=app.Dispatcher.BeginInvoke(new Action(async()=>await QuitAsync()));return new{ok=true};}
    if(action=="language-settings"){OpenExternal("ms-settings:regionlanguage");return new{ok=true,code="language-settings-opened"};}
-   if(action=="firmware")return Firmware();
+   if(new[]{"diagnose","repair","update","check-update","download-update","install-update"}.Contains(action)&&File.Exists(Path.Combine(root,"preview-build.txt")))return new{ok=false,code="previewMaintenance"};
    if(action!="diagnose"&&action!="repair"&&action!="update")return new{ok=false,code="action-failed"};
    maintenanceBusy=true;StopInput();Emit("maintenance",true);
    try{

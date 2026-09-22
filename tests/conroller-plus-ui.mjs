@@ -36,6 +36,19 @@ try{
  await page.locator('[data-tab="appearance"]').click();
  await page.evaluate(()=>window.feedRuntime({connected:true}));
  await page.screenshot({path:'.superpowers/sdd/2026-09-21-conroller-plus/settings-new.png'});
+ await page.locator('[data-opacity="0"]').click();
+ await page.waitForTimeout(250);
+ await page.screenshot({path:'.superpowers/sdd/2026-09-21-conroller-plus/v1.1-frosted.png'});
+ await page.locator('[data-tab="controller"]').click();
+ await page.screenshot({path:'.superpowers/sdd/2026-09-21-conroller-plus/v1.1-controller.png'});
+ assert.equal(await page.locator('.binding-row i').first().evaluate(el=>getComputedStyle(el).maskRepeat),'no-repeat');
+ assert.equal(await page.locator('.binding-row i').first().evaluate(el=>getComputedStyle(el).maskSize),'contain');
+ assert.equal(await page.locator('.letter path[fill]').first().evaluate(el=>getComputedStyle(el).fill),'rgba(0, 0, 0, 0.65)');
+ assert.equal(await page.locator('.version').textContent(),'v1.1');
+ await page.locator('[data-action="language"]').click();
+ assert.equal(await page.locator('[data-action="language"]').getAttribute('aria-expanded'),'true');
+ await page.keyboard.press('Escape');
+ assert.equal(await page.locator('[data-action="language"]').getAttribute('aria-expanded'),'false');
  assert.deepEqual(errors,[]);
  console.log('Conroller Plus UI: bindings, disconnected restrictions, tray action and appearance rendering passed');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

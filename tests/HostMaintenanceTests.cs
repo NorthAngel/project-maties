@@ -22,7 +22,7 @@ internal static class HostMaintenanceTests
 
     private static readonly string[] RequiredReleaseFiles =
     {
-        "ControllerCompanion.exe",
+        "ConrollerPlus.exe",
         "Microsoft.Web.WebView2.Core.dll",
         "Microsoft.Web.WebView2.Wpf.dll",
         "WebView2Loader.dll",
@@ -229,7 +229,7 @@ internal static class HostMaintenanceTests
             ReleaseInfo result = Maintenance.VerifyRelease(root, "0.5.9");
             Equal("0.6.0", result.Version, "VerifyRelease returns manifest version");
             Equal(Path.GetFullPath(root), result.Root, "VerifyRelease returns normalized root");
-            Equal(Path.Combine(Path.GetFullPath(root), "ControllerCompanion.exe"), result.Executable, "VerifyRelease returns fixed executable path");
+            Equal(Path.Combine(Path.GetFullPath(root), "ConrollerPlus.exe"), result.Executable, "VerifyRelease returns fixed executable path");
             Equal(RequiredReleaseFiles.Length, files.Count, "Release fixture covers every contract-required file");
         });
     }
@@ -239,41 +239,41 @@ internal static class HostMaintenanceTests
         WithTempDirectory(root =>
         {
             Dictionary<string, string> files = CreateValidRelease(root, "0.6.0");
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", files);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", files);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.6.0"), "update-not-newer", "Release version must be newer");
 
             WriteReleaseManifest(root, "Other", "webview2", "0.6.0", files);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-product", "Release product is exact");
-            WriteReleaseManifest(root, "ControllerCompanion", "electron", "0.6.0", files);
+            WriteReleaseManifest(root, "ConrollerPlus", "electron", "0.6.0", files);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-product", "Release host is exact");
 
             Dictionary<string, string> missing = new Dictionary<string, string>(files);
             missing.Remove("web/src/runtime-engine.js");
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", missing);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", missing);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-manifest", "Release manifest requires every runtime asset");
 
             Dictionary<string, string> traversal = new Dictionary<string, string>(files)
             {
                 ["../outside.dll"] = files["WebView2Loader.dll"]
             };
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", traversal);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", traversal);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-path", "Release rejects traversal manifest path");
 
             Dictionary<string, string> backslash = new Dictionary<string, string>(files)
             {
                 ["web\\outside.js"] = files["WebView2Loader.dll"]
             };
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", backslash);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", backslash);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-path", "Release rejects backslash manifest path");
 
             Dictionary<string, string> absolute = new Dictionary<string, string>(files)
             {
                 ["C:/outside.dll"] = files["WebView2Loader.dll"]
             };
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", absolute);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", absolute);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-path", "Release rejects absolute or colon manifest path");
 
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6", files);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6", files);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-not-newer", "Release version uses integer x.y.z form");
 
             Dictionary<string, string> oversized = new Dictionary<string, string>(files);
@@ -281,18 +281,18 @@ internal static class HostMaintenanceTests
             {
                 oversized["extra/" + index + ".bin"] = files["WebView2Loader.dll"];
             }
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", oversized);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", oversized);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-manifest", "Release manifest caps file count at 10000");
 
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", files);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", files);
             File.WriteAllText(Path.Combine(root, "web", "overlay.html"), "corrupt");
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-integrity", "Release verifies every manifest hash");
 
             files = CreateValidRelease(root, "0.6.0");
             byte[] x86 = PeImage(0x014c);
-            File.WriteAllBytes(Path.Combine(root, "ControllerCompanion.exe"), x86);
-            files["ControllerCompanion.exe"] = Sha256(x86);
-            WriteReleaseManifest(root, "ControllerCompanion", "webview2", "0.6.0", files);
+            File.WriteAllBytes(Path.Combine(root, "ConrollerPlus.exe"), x86);
+            files["ConrollerPlus.exe"] = Sha256(x86);
+            WriteReleaseManifest(root, "ConrollerPlus", "webview2", "0.6.0", files);
             ThrowsCode(() => Maintenance.VerifyRelease(root, "0.5.9"), "update-product", "Release executable must be x64 PE");
         });
     }
@@ -623,13 +623,13 @@ internal static class HostMaintenanceTests
         {
             string path = Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(path));
-            byte[] bytes = relative == "ControllerCompanion.exe"
+            byte[] bytes = relative == "ConrollerPlus.exe"
                 ? PeImage(0x8664)
                 : Encoding.UTF8.GetBytes(version + " " + relative);
             File.WriteAllBytes(path, bytes);
             files[relative] = Sha256(bytes);
         }
-        WriteReleaseManifest(root, "ControllerCompanion", "webview2", version, files);
+        WriteReleaseManifest(root, "ConrollerPlus", "webview2", version, files);
         return files;
     }
 

@@ -17,6 +17,7 @@ namespace ProjectMaties {
   [DllImport("shcore.dll")]static extern int GetDpiForMonitor(IntPtr monitor,int type,out uint x,out uint y);
   [DllImport("user32.dll")]static extern bool RegisterHotKey(IntPtr h,int id,uint modifiers,uint vk);
   [DllImport("user32.dll")]static extern bool UnregisterHotKey(IntPtr h,int id);
+  internal static uint DpiAt(Point point){uint x=96,y=96;try{GetDpiForMonitor(MonitorFromPoint(point,2),0,out x,out y);}catch{}return Math.Max(96,x);}
   internal static void MakeOverlay(IntPtr handle){SetStyle(handle,-20,new IntPtr(GetStyle(handle,-20).ToInt64()|0x08000020));}
   internal static void Escape(BrowserWindow settings,bool enabled){var h=new WindowInteropHelper(settings).Handle;UnregisterHotKey(h,1);if(enabled)RegisterHotKey(h,1,0x4000,27);}
   internal static void Position(BrowserWindow window,System.Collections.Generic.Dictionary<string,object> packet,System.Collections.Generic.Dictionary<string,object> appearance,string layout){

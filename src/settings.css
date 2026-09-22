@@ -33,3 +33,23 @@ input[type=checkbox]{appearance:none;width:39px;height:24px;background:var(--con
 #controller-diagram{position:relative;border-top:2px solid var(--line);height:368px;margin:15px -12px 0}.diagram-key{position:absolute;display:flex;align-items:center;flex-direction:column;gap:4px;width:115px;transform:translateX(-50%)}.diagram-key i{width:31px;height:29px;background:var(--text)}.diagram-key span{font-size:11px;text-align:center;line-height:13px;max-width:112px}
 .popup{position:fixed;z-index:20;width:320px;padding:16px 13px;background:var(--panel);border-radius:24px;box-shadow:0 7px 35px #0004;border:1px solid var(--line);max-height:650px;overflow:auto}.popup h2{font-size:20px;font-weight:400;margin:4px 0 12px}.popup p{font-size:15px;line-height:1.5;white-space:pre-line}.popup button[role=option],.popup .confirm-button{display:block;width:100%;text-align:left;min-height:49px;border-radius:13px;background:var(--window);margin-top:10px;padding:12px 16px;font-size:17px}.popup button[aria-selected=true],.popup .confirm-button{background:var(--accent);color:white}.popup .popup-search{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px;background:var(--window)}.popup button:hover{filter:brightness(.95)}#notice{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;max-width:80%;background:var(--text);color:var(--panel);padding:12px 20px;border-radius:16px;font-size:15px}
 body:not(.connected) .option-name i{background:#bcbcc4}body:not(.connected) .option-name{color:#bcbcc4}
+
+/* v1.1: every source icon is a single fitted image, never a repeating mask. */
+.source-icon{display:inline-block;flex:none;mask-position:center;mask-size:contain;mask-repeat:no-repeat}
+.language-button{height:45px;width:48px;padding:0}
+.language-button img{position:absolute;inset:7px 0 auto;width:48px;height:32px}
+.language-active{display:none}.language-button[aria-expanded=true] .language-normal{display:none}.language-button[aria-expanded=true] .language-active{display:block}
+.opacity-control{position:relative;width:432px;margin:24px 4px 0;padding:0;display:block}
+.opacity-control .glass-icon{position:absolute;top:13px;width:30px;height:30px}
+.opacity-control .glass-icon:first-child{left:20px}.opacity-control .glass-icon:last-child{left:381px}
+.opacity-control input[type=range]{position:absolute;left:63px;top:13px;width:300px;height:30px;background:transparent;border-radius:0}
+.opacity-control input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:#565656}
+.opacity-control input[type=range]::-webkit-slider-thumb{width:46px;height:30px;margin-top:-11px;border:.5px solid #5e616480;background:rgba(255,255,255,var(--thumb-alpha,.485));border-radius:17px;backdrop-filter:blur(1px);box-shadow:inset 0 1px 1px #ffffff66,0 0 0 1px #0000001a}
+.preview-wheels{top:170px}
+input.theme-switch{border-radius:20px}
+:root{--text:#343439}
+html,body{background:transparent}body{background:var(--window);border-radius:20px}
+
+/* The approved fixed preview backdrop can be sampled locally, without desktop capture. */
+.preview .glass-surface::before{inset:-50px;backdrop-filter:none;background-image:url('../assets/figma-ui/preview-background.png');background-repeat:no-repeat;background-size:calc(440px / var(--preview-factor)) calc(680px / var(--preview-factor));background-position:calc(50px - var(--plate-x) - var(--preview-origin) / var(--preview-factor) - var(--disc-offset,0px)) calc(50px - var(--plate-y) - 170px / var(--preview-factor));filter:blur(var(--glass-blur))}
+.preview-wheels.dual #sectors{--disc-offset:816.178px}

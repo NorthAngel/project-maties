@@ -16,7 +16,7 @@ export async function createWheel(host) {
     // Only local, original Figma exports; remove any active/foreign content before embedding.
     svg.querySelectorAll('script,foreignObject').forEach(n=>n.remove());
     svg.querySelectorAll('*').forEach(el=>{for(const a of [...el.attributes])if(/^on/i.test(a.name))el.removeAttribute(a.name);});
-    const ids=new Map([...svg.querySelectorAll('[id]')].map(el=>[el.id,prefix+el.id]));
+    const ids=new Map([...svg.querySelectorAll('[id]')].map(el=>[el.id,prefix+mode+'-'+sector+'-'+el.id]));
     svg.querySelectorAll('*').forEach(el=>{for(const a of [...el.attributes]){let value=a.value;for(const [id,replacement] of ids){value=value.replaceAll(`url(#${id})`,`url(#${replacement})`);if(value===`#${id}`)value=`#${replacement}`;}if(a.name==='id')value=ids.get(a.value);el.setAttribute(a.name,value);}});
     svg.setAttribute('aria-hidden','true');
     const isText=node.type==='TEXT';
@@ -27,7 +27,9 @@ export async function createWheel(host) {
     el.append(document.importNode(svg,true));
     if(!isText){
      const outline=document.createElementNS('http://www.w3.org/2000/svg','svg');outline.setAttribute('viewBox',svg.getAttribute('viewBox'));outline.classList.add('selection-outline');outline.setAttribute('aria-hidden','true');
-     const source=svg.querySelector('path[fill]:not([fill="none"])');if(source){const path=source.cloneNode(true);path.setAttribute('fill','none');path.removeAttribute('fill-opacity');path.removeAttribute('shape-rendering');path.setAttribute('stroke-linejoin','round');outline.append(path);}el.append(outline);
+     const source=svg.querySelector('path[fill]:not([fill="none"])');
+     if(source){const glass=document.createElement('div');glass.className='glass-surface';glass.style.clipPath='path("'+source.getAttribute('d')+'")';glass.style.setProperty('--plate-x',node.x+'px');glass.style.setProperty('--plate-y',node.y+'px');el.prepend(glass);}
+     if(source){const path=source.cloneNode(true);path.setAttribute('fill','none');path.removeAttribute('fill-opacity');path.removeAttribute('shape-rendering');path.setAttribute('stroke-linejoin','round');outline.append(path);}el.append(outline);
     }
     tile.append(el);
    }

@@ -1,3 +1,9 @@
+# 历史构件 v0.6.0
+
+此目录保留旧版文件。**新版 Conroller Plus 请前往 [GitHub Releases](https://github.com/NorthAngel/project-maties/releases/tag/v1.1) 下载**，不要使用本目录旧程序覆盖新版。
+
+---
+
 # Controller Companion v0.6.0
 
 This directory contains the reviewed Windows x64 candidate binaries and the sidecar files needed to run the host from this folder.

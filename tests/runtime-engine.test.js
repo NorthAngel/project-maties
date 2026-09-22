@@ -305,7 +305,7 @@ test('classic WebView bridge correlates replies, filters unrelated messages, and
   await assert.rejects(failed, /native-failure/);
 });
 
-test('settings runtime entry keeps the legacy API names and routes engine/native methods', async () => {
+test('settings runtime entry exposes supported APIs and excludes desktop capture', async () => {
   const calls = [];
   const listeners = new Map();
   const host = {
@@ -356,7 +356,7 @@ test('settings runtime entry keeps the legacy API names and routes engine/native
     for (const name of [
       'getSystem', 'setSystem', 'onSystem', 'systemAction', 'controllerAction',
       'getAppearance', 'setAppearance', 'onAppearance', 'getRuntime', 'onRuntime',
-      'onController', 'captureDesktop', 'onDesktop', 'windowAction', 'setEnabled', 'menu',
+      'onController', 'windowAction', 'setEnabled', 'menu',
     ]) assert.equal(typeof desktop[name], 'function', `${name} remains available`);
 
     assert.equal((await desktop.getAppearance()).opacity, 25);
@@ -366,7 +366,8 @@ test('settings runtime entry keeps the legacy API names and routes engine/native
     assert.deepEqual(await desktop.getSystem(), {ok: true});
     assert.deepEqual(await desktop.setSystem({theme: 'dark'}), {ok: true});
     assert.deepEqual(await desktop.systemAction({action: 'diagnose'}), {ok: true});
-    assert.deepEqual(await desktop.captureDesktop(), {ok: true});
+    assert.equal(desktop.captureDesktop, undefined);
+    assert.equal(desktop.onDesktop, undefined);
     assert.deepEqual(await desktop.windowAction('minimize'), {ok: true});
     assert.deepEqual(await desktop.menu(), {ok: true});
 
@@ -375,14 +376,13 @@ test('settings runtime entry keeps the legacy API names and routes engine/native
       && call.notify
       && call.nativeSubscribed
       && call.stopSubscribed
-      && call.maintenanceSubscribed
-      && call.settingsHiddenSubscribed));
+      && call.maintenanceSubscribed));
     assert.ok(calls.some(call => call.method === 'controller.request' && call.args?.action === 'configure'));
     assert.ok(calls.some(call => call.method === 'appearance.save' && call.args?.opacity === 35));
     assert.ok(calls.some(call => call.method === 'system.get'));
     assert.ok(calls.some(call => call.method === 'system.set' && call.args?.theme === 'dark'));
     assert.ok(calls.some(call => call.method === 'system.action' && call.args?.action === 'diagnose'));
-    assert.ok(calls.some(call => call.method === 'desktop.preview'));
+    assert.ok(!calls.some(call => call.method === 'desktop.preview'));
     assert.ok(calls.some(call => call.method === 'window.action' && call.args === 'minimize'));
     assert.ok(calls.some(call => call.method === 'app.menu'));
     assert.ok(calls.some(call => call.method === 'event.emit' && call.args?.event === 'runtime'));

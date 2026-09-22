@@ -1,12 +1,35 @@
-# Project Maties
+# Conroller Plus
 
-Windows 手柄输入工具，支持透明单转盘/双转盘选字、鼠标与滚轮、按键映射、手柄校准和 Windows 中英日输入法。
+Windows 手柄输入软件，提供单／双转盘输入、鼠标与四向滚动、按键自定义，以及根据 Figma 原型制作的设置界面。
 
-当前 v0.6.0 将 v5.5 的 Electron 桌面壳迁移到 **.NET Framework 4.8 + 共享 WebView2**。主要目标是减少安装体积，同时让设置界面可以独立重绘。此候选版本的实际桌面验收尚未完成，详见 [验证记录](docs/验证记录-v0.6.0.md)。
+## 下载 v1.1
 
-## 开发
+**[进入 GitHub Releases 下载 Windows x64 预览版](https://github.com/NorthAngel/project-maties/releases/tag/v1.1)**
 
-Windows x64，Node.js 22 或更新版本、PowerShell 7、.NET SDK 10（构建 net48），本机安装共享 WebView2。使用 Visual Studio 时打开 `ControllerCompanion.sln`。
+下载 `ConrollerPlus-v1.1-win-x64.zip`，完整解压，然后打开 `ConrollerPlus.exe`。请保留同目录文件。需要 Windows 10/11 x64、.NET Framework 4.8 和 Microsoft Edge WebView2 Runtime。
+
+这是公开预览版。自动更新替换、回滚和完整依赖修复尚未完成；对应入口会提示。Figma Glass 的光学折射目前为近似实现。真实手柄跨型号和不同应用中的输入兼容性仍需实机验收。
+
+## 使用
+
+- 接入手柄后自动识别，可在多个已连接手柄之间选择。
+- L3 呼出／收起转盘，支持单盘和双盘；固定选字按键之外的按键可自定义。
+- 设置中调整透明度、尺寸、深浅色、左右摇杆死区、鼠标速度与滚动速度。
+- 点击“开始使用”隐藏到系统托盘；单击托盘图标打开设置，右键菜单可退出。
+- 支持简体中文、英文、日文。配置保存在 `%APPDATA%\ConrollerPlus`，新版首次运行不迁移旧版配置。
+- 登录后启动默认关闭；窗口固定大小、支持拖动、最小化至托盘和关闭行为设置。
+
+## v1.1 界面修正
+
+- 修正图标重复平铺和裁切。
+- 语言按钮仅在打开选项时显示选中颜色。
+- 使用 Figma 原始透明度图标、轨道和玻璃滑块参数。
+- 恢复字符颜色，补充 Frosted 预览模糊效果。
+- 圆角窗口与支持深浅色的托盘菜单。
+
+## 开发与构建
+
+Windows x64，Node.js 22+、PowerShell 7、.NET SDK 10（构建 net48）。
 
 ```powershell
 npm ci
@@ -15,42 +38,23 @@ npm run build:native
 npm run test:controllers
 npm run test:host
 npm run package:desktop
+npm run verify:package
 ```
 
-发布过程先在 `artifacts/` 使用新目录完成构建，`artifacts/latest-build.json` 记录程序目录、ZIP、大小和 SHA-256。经过检查的候选二进制会复制到受控的 `release/` 目录，方便从 GitHub 仓库下载；运行其中的 `ControllerCompanion.exe` 时仍需要系统共享 WebView2。开发源码不能直接作为安装目录使用。
+程序包输出到 `artifacts/`；`artifacts/latest-build.json` 记录文件位置与 SHA-256。`npm run dev` 只预览网页，不提供原生手柄、托盘或系统输入功能。
 
-`npm run dev` 仅预览设置网页，系统托盘、输入、校准和系统操作需使用 Windows 宿主。浏览器预览不能作为桌面功能验收。
-
-## 代码职责
-
-| 目录/文件 | 职责 |
+| 目录 | 职责 |
 | --- | --- |
-| `host/` | 窗口、托盘、共享 WebView2、消息路由、配置持久化、服务生命周期和恢复 |
-| `native/` | SDL/XInput 手柄读取、系统鼠标/键盘输入、IME |
-| `src/runtime-engine.js` | 连接输入会话、手柄状态和设置；不依赖 Electron |
-| `src/session.js`, `activation.js`, `pointer.js` | 输入与手势逻辑 |
-| `settings.html`, `src/settings.js`, `src/settings.css` | 可重绘的设置界面 |
-| `assets/exact/`, `src/figma-layout.js`, `wheel-view.js`, `wheel.css` | 原转盘素材、布局与绘制 |
-| `tests/` | 逻辑、原生后端、宿主服务/维护测试 |
-| `scripts/package-webview2.ps1` | 最小发布白名单、恢复包、完整性清单和 ZIP |
+| `host/` | Windows 窗口、托盘、WebView2、配置及原生服务生命周期 |
+| `native/` | SDL/XInput 手柄读取、Windows 鼠标键盘与输入法操作 |
+| `src/` | 设置界面、按键映射、转盘会话和绘制 |
+| `assets/` | Figma 图形、手柄图标和界面字体 |
+| `tests/` | 逻辑及宿主检查 |
 
-旧 Electron 宿主、打包脚本及历史桌面测试暂留作迁移参考；它们不参与 v0.6.0 打包，项目已移除 Electron 依赖。旧版维护测试仍保留为历史回归；新宿主维护由 C# 测试覆盖。
+仓库中的 `release/` 保留 v0.6.0 历史构件；新版下载统一使用 GitHub Releases。旧校准、固件等历史模块不属于新版界面功能。
 
-## UI 后续重绘
+[使用说明](docs/预览版使用说明.md) · [第三方说明](THIRD-PARTY-NOTICES.md)
 
-先修改设置 HTML/CSS 和交互层，继续通过 `window.desktop` 接口调用功能。避免把按键映射、手柄状态、文件访问与系统操作移入页面组件。转盘素材保持独立；需要调整布局时同时检查单盘和双盘、缩放、浅色/深色及输入脉冲。
+项目基于 MIT 许可的 [htlin222/web-gamepad-starter](https://github.com/htlin222/web-gamepad-starter) 演进，保留上游许可与历史。第三方素材和字体适用各自许可，不自动包含在项目 MIT 授权中。
 
-[架构与界面改版说明](docs/架构与界面改版.md) · [使用说明](docs/使用说明.md) · [贡献流程](CONTRIBUTING.md) · [依赖许可](THIRD-PARTY-NOTICES.md)
-
-## 公开访问与发布
-
-项目公开托管于 [NorthAngel/project-maties](https://github.com/NorthAngel/project-maties)。任何设备均可在浏览器中查看源码、克隆仓库，或通过 GitHub 的 **Code → Download ZIP** 下载完整源码；经过检查的候选构件保存在仓库的 `release/` 目录中。
-
-源码保留原上游 MIT 许可与历史： https://github.com/htlin222/web-gamepad-starter 。持续集成只构建和保存测试产物，不部署 GitHub Pages，也不自动发布 Release。发布清单不含缓存、截图、个人配置或共享浏览器本体。用户配置继续存储在 `%APPDATA%/ControllerCompanion`。
-
-## 贡献者
-
-- **NorthAngel**：项目发起、交互与视觉设计、维护。
-- **GPT**：代码贡献。
-
-ZIP 压缩体积和解压安装体积应分别报告；共享 WebView2 的已有安装和后续缓存不包含在程序目录体积中。
+设计与维护：NorthAngel。代码贡献：GPT。
